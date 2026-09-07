@@ -1,0 +1,3 @@
+source_bundle,source_window_index,start_year,end_year,load_weather_source,wind_source,solar_source
+wtk_bchrrr_nsrdb,1,2007,2014,wtk_nsrdb,wtk,nsrdb
+wtk_bchrrr_nsrdb,2,2015,2023,bchrrr_nsrdb,bchrrr,nsrdb

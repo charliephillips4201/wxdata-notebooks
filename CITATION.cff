@@ -1,0 +1,17 @@
+cff-version: 1.2.0
+message: "If you use these notebooks, cite this repository and the associated Zenodo dataset."
+type: software
+title: "Synchronized Wind, Solar, and Load Data for Power System Planning: Notebook Methods Companion"
+authors:
+  - family-names: "Phillips"
+    given-names: "Charlie"
+repository-code: "https://github.com/charliephillips4201/wxdata-notebooks"
+abstract: "Jupyter notebooks, documentation, and compact supporting inputs showing methods for synchronized load, weather, wind capacity-factor, solar capacity-factor, net-load, pooling, and stress-event analyses."
+keywords:
+  - "load forecasting"
+  - "net load"
+  - "wind capacity factor"
+  - "solar capacity factor"
+  - "balancing authority"
+  - "weather data"
+  - "Jupyter notebooks"

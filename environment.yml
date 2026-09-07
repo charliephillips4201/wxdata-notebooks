@@ -1,0 +1,21 @@
+name: wxdata-notebooks
+channels:
+  - conda-forge
+dependencies:
+  - python=3.10
+  - pip
+  - pandas
+  - pyarrow
+  - numpy
+  - scipy
+  - certifi
+  - h5py
+  - h5pyd
+  - openpyxl
+  - matplotlib
+  - jupyterlab
+  - ipykernel
+  - "setuptools<81"
+  - pip:
+      - "tell==1.3.0"
+      - "NREL-reV"

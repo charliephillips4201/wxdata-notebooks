@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1080" height="520" viewBox="0 0 1080 520" role="img" aria-labelledby="title desc">
+  <title id="title">wxdata paper data process flow</title>
+  <desc id="desc">Weather, load, and renewable inputs flow to BA, pooled-region, and state products, stress catalogs, validation, and analysis.</desc>
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto"><path d="M0,0 L10,3.5 L0,7 Z" fill="#3b4a5a"/></marker>
+    <style>.box{stroke:#3b4a5a;stroke-width:2;rx:10}.h{font:700 20px sans-serif}.t{font:16px sans-serif}.a{stroke:#3b4a5a;stroke-width:2.5;marker-end:url(#arrow)}</style>
+  </defs>
+  <rect width="1080" height="520" fill="white"/>
+  <rect class="box" x="35" y="55" width="240" height="120" fill="#fff1c7"/><text class="h" x="155" y="88" text-anchor="middle">Source inputs</text><text class="t" x="55" y="120">County population + weather</text><text class="t" x="55" y="145">EIA-930 and EIA-860</text>
+  <rect class="box" x="350" y="25" width="280" height="150" fill="#dceafa"/><text class="h" x="490" y="58" text-anchor="middle">Load flow</text><text class="t" x="370" y="92">County → BA weather</text><text class="t" x="370" y="119">TELL BA forecasts</text><text class="t" x="370" y="146">BA → county → state + GCAM</text>
+  <rect class="box" x="710" y="25" width="330" height="150" fill="#e1f2db"/><text class="h" x="875" y="58" text-anchor="middle">Wind/solar CF flow</text><text class="t" x="730" y="92">EIA-860 sites → weather points</text><text class="t" x="730" y="119">reV/PySAM site CF</text><text class="t" x="730" y="146">Capacity-weight to BA or state</text>
+  <line class="a" x1="275" y1="115" x2="340" y2="115"/><line class="a" x1="275" y1="115" x2="700" y2="115"/>
+  <rect class="box" x="230" y="240" width="620" height="100" fill="#eadff5"/><text class="h" x="540" y="275" text-anchor="middle">Synchronized scenario metrics</text><text class="t" x="540" y="306" text-anchor="middle">Six BA, pooled-region, and state nameplate-capacity portfolios</text>
+  <line class="a" x1="490" y1="175" x2="490" y2="230"/><line class="a" x1="875" y1="175" x2="650" y2="230"/>
+  <rect class="box" x="70" y="405" width="270" height="75" fill="#e6eef7"/><text class="h" x="205" y="438" text-anchor="middle">Validation</text><text class="t" x="205" y="463" text-anchor="middle">BA, MISO loss, and Iowa checks</text>
+  <rect class="box" x="405" y="405" width="270" height="75" fill="#f5e4ec"/><text class="h" x="540" y="438" text-anchor="middle">Stress catalogs</text><text class="t" x="540" y="463" text-anchor="middle">BA, pooled, and raw-state events</text>
+  <rect class="box" x="740" y="405" width="270" height="75" fill="#e8e5f6"/><text class="h" x="875" y="438" text-anchor="middle">Analysis</text><text class="t" x="875" y="463" text-anchor="middle">Figures, weather, seasonality</text>
+  <line class="a" x1="460" y1="340" x2="235" y2="395"/><line class="a" x1="540" y1="340" x2="540" y2="395"/><line class="a" x1="620" y1="340" x2="845" y2="395"/>
+</svg>

@@ -1,0 +1,32 @@
+# Local settings and credentials
+.env
+.env.*
+!.env.example
+.vscode/
+
+# Python and Jupyter caches
+**/__pycache__/
+**/.ipynb_checkpoints/
+*.pyc
+
+# Large Zenodo datasets extracted beside the GitHub inputs
+paper_data/data/wtk_bchrrr_nsrdb_2007_2023/
+paper_data/data/taiesm1_historical_ssp245_v022_2000_2099/
+
+# Notebook-generated files and acquisition caches
+paper_data/notebook_outputs/
+paper_data/data_flow/outputs/
+paper_data/validation/outputs/
+paper_data/analysis/outputs/
+*.h5
+*.hdf5
+*.nc
+*.parquet
+*.feather
+
+# Local archives, logs, and operating-system files
+*.zip
+*.log
+*.tmp
+.DS_Store
+__MACOSX__/
