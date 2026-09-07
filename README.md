@@ -1,21 +1,21 @@
 # Synchronized Wind, Solar, and Load Data for Power System Planning
 
-This repository is the public methods companion for a set of synchronized
-weather, electricity-load, wind-capacity-factor, solar-capacity-factor, and
-net-load data products. It contains the Jupyter notebooks, documentation, and
-compact supporting inputs needed to inspect the methods and reproduce the
-paper-facing analyses. The private operational pipeline, run configurations,
-and large generated datasets are intentionally not included.
+This repository is the public methods companion for synchronized weather,
+electricity-load, wind-capacity-factor, solar-capacity-factor, net-load, and
+stress-event datasets. It contains 17 executed Jupyter notebooks,
+documentation, and the compact inputs used directly by those notebooks. The
+private operational pipeline, run configurations, and large generated datasets
+are intentionally not included.
 
 The large analysis-ready datasets are distributed separately through Zenodo
 DOI [10.5281/zenodo.21844870](https://doi.org/10.5281/zenodo.21844870).
 
 ## Start here
 
-Read [`paper_data/documentation/START_HERE.md`](paper_data/documentation/START_HERE.md)
-for the recommended notebook order and setup instructions. The exact input
-requirements for each notebook are listed in
-[`paper_data/documentation/NOTEBOOK_INPUTS.md`](paper_data/documentation/NOTEBOOK_INPUTS.md).
+Read [`documentation/START_HERE.md`](documentation/START_HERE.md) for the
+recommended notebook order and setup instructions. Exact requirements for each
+notebook are listed in
+[`documentation/NOTEBOOK_INPUTS.md`](documentation/NOTEBOOK_INPUTS.md).
 
 ## Weather datasets
 
@@ -24,41 +24,31 @@ requirements for each notebook are listed in
 | WTK / BC-HRRR / NSRDB | 2007–2023 | Historical weather dataset combining wind-resource, reanalysis, solar-resource, and load-weather variables. |
 | Sup3rCC / TaiESM1 | 2000–2099 | Historical and simulated future climate dataset used for selected balancing-authority, pooled-region, and Iowa analyses. |
 
-The notebooks also use:
+The notebooks also use TELL for weather-informed load modeling; reV and
+PySAM/SAM for wind and solar capacity factors; EIA-860 generator records;
+EIA-930-derived load and renewable observations; GCAM-USA state electricity
+demand scenarios; and percentile/event-grouping methods for power-system stress
+analysis.
 
-- TELL to demonstrate weather-informed hourly electricity-load modeling;
-- reV and PySAM/SAM technology models to convert wind and solar resource data
-  into site and regional capacity factors;
-- EIA-860 records to locate and capacity-weight renewable generators;
-- EIA-930-derived observations for load and renewable-generation validation;
-- GCAM-USA scenarios to scale Iowa state load trajectories; and
-- percentile and event-grouping methods to identify stress hours and stress
-  events under six wind/solar nameplate-capacity portfolios.
-
-Source descriptions and upstream acknowledgments are collected in
-[`paper_data/SOURCES.md`](paper_data/SOURCES.md) and
-[`paper_data/data/source_inputs/README.md`](paper_data/data/source_inputs/README.md).
-
-## Notebook collection
-
-The canonical collection contains 17 notebooks:
+## Repository layout
 
 ```text
-paper_data/
-├── data_flow/      # 8 notebooks showing data construction and event methods
-├── validation/     # 4 notebooks evaluating load, renewable, and climate products
-├── analysis/       # 5 notebooks producing paper-facing comparisons and figures
-├── documentation/  # setup, input guide, and process-flow diagrams
-├── data/
-│   ├── source_inputs/  # 113 compact inputs stored on GitHub
-│   ├── wtk_bchrrr_nsrdb_2007_2023/               # download from Zenodo
-│   └── taiesm1_historical_ssp245_v022_2000_2099/  # download from Zenodo
-└── manifests/      # 3 compact analysis manifests stored on GitHub
+wxdata-notebooks/
+├── notebooks/
+│   ├── data_flow/      # 8 construction and stress-event notebooks
+│   ├── validation/     # 4 load, renewable, and climate validation notebooks
+│   └── analysis/       # 5 paper-facing analysis and figure notebooks
+├── data/               # compact GitHub inputs plus ignored Zenodo data roots
+├── manifests/          # 3 analysis metadata manifests
+├── documentation/      # setup, input guide, sources, and process diagrams
+├── environment.yml
+├── CITATION.cff
+└── LICENSE
 ```
 
-The notebooks retain selected outputs inside the `.ipynb` files so figures and
-tables render on GitHub. Standalone output folders, acquisition caches, and the
-extracted Zenodo datasets are ignored by Git.
+All notebooks retain their saved outputs so tables and figures render directly
+on GitHub. Standalone generated files are written under the ignored
+`notebook_outputs/` directory and are not part of the Zenodo deposit.
 
 ## Install and open the notebooks
 
@@ -67,26 +57,27 @@ From the repository root:
 ```powershell
 conda env create -f environment.yml
 conda activate wxdata-notebooks
-jupyter lab paper_data
+jupyter lab notebooks
 ```
 
-Download and extract the two Zenodo archives before rerunning notebooks that
-consume the full analysis-ready datasets. Instructions are in
-[`paper_data/data/README.md`](paper_data/data/README.md).
+Download and extract the two Zenodo archives into `data/` before rerunning
+notebooks that consume the full analysis-ready datasets. See
+[`data/README.md`](data/README.md).
 
-Some acquisition and reconstruction cells require network access, external
-credentials, TELL, or specialist NREL dependencies. Saved notebook outputs and
-the distributed inputs allow the documented method to be inspected without
-rerunning every acquisition step.
+Some acquisition and reconstruction steps require network access, NREL HSDS,
+TELL, or reV/PySAM. Saved notebook outputs allow the complete documented method
+to be reviewed without rerunning those external acquisition steps.
 
 ## Repository boundary
 
-This public repository does not contain the private operational CLI, source
-package, run configurations, production scripts, tests, or working input
-directories. Those materials are not required by the 17 public notebooks.
-Fixed scientific-method inputs used directly by the notebooks—including SAM
-JSON parameter files and one county-weather provenance YAML file—remain under
-`paper_data/data/source_inputs/`.
+This repository does not contain the private operational CLI, Python package,
+production scripts, run configurations, tests, or working data trees. The
+Zenodo record remains data-only and does not contain notebooks or notebook
+outputs.
+
+Source descriptions and upstream acknowledgments are collected in
+[`documentation/SOURCES.md`](documentation/SOURCES.md) and
+[`data/README.md`](data/README.md).
 
 ## Citation
 
@@ -103,6 +94,10 @@ content of this repository.
 
 ## License
 
-This repository is being prepared for public release. A root `LICENSE` must be
-added before the repository is made public. Upstream data and software retain
-their own terms and attribution requirements.
+Unless otherwise noted, the original notebooks and documentation contributed
+by Charlie Phillips are licensed under the
+[Creative Commons Attribution 4.0 International License](https://creativecommons.org/licenses/by/4.0/).
+See [`LICENSE`](LICENSE).
+
+Third-party data and software retain their original licenses and attribution
+requirements. Inclusion in this repository does not relicense those materials.
