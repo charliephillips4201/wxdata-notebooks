@@ -21,8 +21,8 @@ notebook are listed in
 
 | Dataset | Period | Purpose |
 | --- | --- | --- |
-| WTK / BC-HRRR / NSRDB | 2007–2023 | Historical weather dataset combining wind-resource, reanalysis, solar-resource, and load-weather variables. |
-| Sup3rCC / TaiESM1 | 2000–2099 | Historical and simulated future climate dataset used for selected balancing-authority, pooled-region, and Iowa analyses. |
+| WTK / BC-HRRR / NSRDB | 2007–2023 | Historical weather dataset combining wind-resource, solar-resource, and load-weather variables. WTK is 2007-2014 and contains wind-resource variables, BC-HRRR is 2015-2023 and contains wind resource variables, NSRDB is 2007-2023 and contains solar resource variables. Load-weather variables are primarily derived from WTK/BC-HRRR, though `ghi` is used for load forecasts and is derived from NSRDB
+| Sup3rCC (TaiESM1) | 2000–2099 | Historical and simulated future climate dataset used for selected balancing-authority, pooled-region, and Iowa analyses. |
 
 The notebooks also use TELL for weather-informed load modeling; reV and
 PySAM/SAM for wind and solar capacity factors; EIA-860 generator records;
