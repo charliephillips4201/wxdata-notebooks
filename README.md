@@ -10,18 +10,30 @@ are intentionally not included.
 The large analysis-ready datasets are distributed separately through Zenodo
 DOI [10.5281/zenodo.21844870](https://doi.org/10.5281/zenodo.21844870).
 
+The initial notebook release candidate is `v0.1.0`, paired with dataset version
+`0.1.0`. These are independent versions. The DOI is reserved for the Zenodo
+draft and becomes resolvable when that record is published. See the
+[release notes and review checklist](documentation/RELEASE_v0.1.0.md).
+
 ## Start here
 
 Read [`documentation/START_HERE.md`](documentation/START_HERE.md) for the
 recommended notebook order and setup instructions. Exact requirements for each
 notebook are listed in
 [`documentation/NOTEBOOK_INPUTS.md`](documentation/NOTEBOOK_INPUTS.md).
+See [`BA coverage`](documentation/BA_COVERAGE.md) for entity names, modeled
+fleet capacities, available products, and validation participation.
+
+For a short reproducibility check, start with the MISO monthly event figure and
+Iowa seasonal risk figures in [Verify the release](documentation/START_HERE.md#verify-the-release).
+Together they consume one file from each Zenodo archive and require no upstream
+weather-service credentials.
 
 ## Weather datasets
 
 | Dataset | Period | Purpose |
 | --- | --- | --- |
-| WTK / BC-HRRR / NSRDB | 2007–2023 | Historical weather dataset combining wind-resource, solar-resource, and load-weather variables. WTK is 2007-2014 and contains wind-resource variables, BC-HRRR is 2015-2023 and contains wind resource variables, NSRDB is 2007-2023 and contains solar resource variables. Load-weather variables are primarily derived from WTK/BC-HRRR, though `ghi` is used for load forecasts and is derived from NSRDB
+| WTK / BC-HRRR / NSRDB | 2007-2023 | Historical wind and load weather from WTK (2007-2014) and BC-HRRR (2015-2023), with NSRDB solar resource and load-weather GHI (2007-2023). |
 | Sup3rCC (TaiESM1) | 2000–2099 | Historical and simulated future climate dataset used for selected balancing-authority, pooled-region, and Iowa analyses. |
 
 The notebooks also use TELL for weather-informed load modeling; reV and
@@ -46,8 +58,10 @@ wxdata-notebooks/
 └── LICENSE
 ```
 
-All notebooks retain their saved outputs so tables and figures render directly
-on GitHub. Standalone generated files are written under the ignored
+The data-flow notebooks teach the construction methods through bounded examples;
+they do not regenerate every file in the release. Validation and analysis
+notebooks read the documented packaged inputs. Notebook outputs retain the
+tables and figures needed for review on GitHub. Standalone generated files are written under the ignored
 `notebook_outputs/` directory and are not part of the Zenodo deposit.
 
 ## Install and open the notebooks
@@ -65,13 +79,15 @@ notebooks that consume the full analysis-ready datasets. See
 [`data/README.md`](data/README.md).
 
 Some acquisition and reconstruction steps require network access, NREL HSDS,
-TELL, or reV/PySAM. Saved notebook outputs allow the complete documented method
-to be reviewed without rerunning those external acquisition steps.
+TELL, or reV/PySAM. Saved notebook outputs allow the documented method to be reviewed without
+rerunning those external acquisition steps. Each notebook states its execution
+requirements and any retained outputs that were not freshly reproduced.
 
 ## Repository boundary
 
 This repository does not contain the private operational CLI, Python package,
-production scripts, run configurations, tests, or working data trees. The
+production scripts, production test suite, run configurations, or working data trees. A small
+`scripts/check_release.py` command checks the released data with two notebooks. The
 Zenodo record remains data-only and does not contain notebooks or notebook
 outputs.
 

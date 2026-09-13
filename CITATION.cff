@@ -1,6 +1,7 @@
 cff-version: 1.2.0
 message: "If you use these notebooks, cite this repository and the associated Zenodo dataset."
 type: software
+version: "0.1.0"
 title: "Synchronized Wind, Solar, and Load Data for Power System Planning: Notebook Methods Companion"
 authors:
   - family-names: "Phillips"

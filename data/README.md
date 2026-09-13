@@ -13,15 +13,19 @@ data/
 ├── gcam_usa/             # eight state electricity-demand scenarios
 ├── load_actuals/         # raw MISO and cleaned 2023 BA observations
 ├── model_parameters/     # SAM settings, source periods, and loss assumptions
-├── population/           # static county population used for state load
 ├── renewable_actuals/    # MISO observed wind and solar generation
 ├── validation/           # load-validation metadata and predictions
 ├── wtk_bchrrr_nsrdb_2007_2023/               # Zenodo; ignored by Git
 └── taiesm1_historical_ssp245_v022_2000_2099/  # Zenodo; ignored by Git
 ```
 
-Only inputs read by a canonical notebook are committed. Large acquisition HDF5
-caches and generated notebook artifacts are not distributed.
+The compact collection contains 100 data files used directly by the notebooks,
+including provenance fields retained with those inputs. State-load population
+weights use `county_weather/county_populations_2000_to_2020.csv` (`pop_2020`);
+the notebook expands those fixed weights into the annual format TELL requires.
+Large acquisition HDF5 caches and generated notebook artifacts are not
+distributed. See the [input/output guide](../documentation/NOTEBOOK_INPUTS.md)
+and [BA coverage guide](../documentation/BA_COVERAGE.md).
 
 ## Add the Zenodo datasets
 
@@ -30,8 +34,8 @@ Download both archives from DOI
 them from the repository root:
 
 ```powershell
-Expand-Archive "C:/path/to/wxdata_historical_2007_2023.zip" -DestinationPath "data"
-Expand-Archive "C:/path/to/wxdata_taiesm_curated_2000_2099.zip" -DestinationPath "data"
+python -m zipfile -e "C:/path/to/wxdata_wtk_bchrrr_nsrdb_2007_2023.zip" "data"
+python -m zipfile -e "C:/path/to/wxdata_sup3rcc_taiesm1_curated_2000_2099.zip" "data"
 ```
 
 Confirm the two roots:
@@ -43,6 +47,20 @@ Test-Path "data/taiesm1_historical_ssp245_v022_2000_2099"
 
 Both commands should return `True`. Do not force-add either data root,
 acquisition caches, or `notebook_outputs/` to Git.
+
+These are the archive filenames for dataset version `0.1.0`. Only the outer ZIP
+names changed; the internal roots shown above remain unchanged. The climate
+model is **TaiESM1** and the upstream Sup3rCC data version is **v0.2.2**.
+
+Keep the three accompanying Zenodo files (`README_DATASET.md`, `LICENSE_DATA.txt`,
+and `RELEASE_MANIFEST.csv`) beside the ZIPs. The
+[release check](../documentation/START_HERE.md#verify-the-release) uses that folder
+to verify checksums and extract just its two inputs into an isolated location.
+It does not need a full extraction into `data/`.
+
+On Windows, use a short checkout path such as `C:\work\wxdata-notebooks`.
+Deeply nested relative paths can fail even when the extracted file exists.
+The two release-check notebooks resolve their paths before opening files.
 
 ## Upstream notices
 
