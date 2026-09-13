@@ -27,3 +27,6 @@ dependencies:
       - "NREL-gaps==0.6.14"
       - "NREL-rex==0.2.86"
       - "NREL-NRWAL==0.0.11"
+      # HSDS' aiobotocore dependency needs this matching AWS client stack.
+      - "boto3==1.26.76"
+      - "s3transfer==0.6.0"
