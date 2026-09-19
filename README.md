@@ -437,12 +437,13 @@ The release preparation reserved the dataset DOI; a branch or reserved DOI
 alone does not establish publication. Use the linked record for availability
 and retain the exact notebook commit and manifest with your results.
 
-The 2026-09-09 review reran 14 notebooks and retained earlier verified results
-for three. Later checks covered selected presentation changes (2026-09-10)
-and the bundled MISO example plus two-archive compatibility (2026-09-19).
-The site-CF check
-used matching legacy weather caches whose original source-version metadata was
-absent. These records do not establish a clean installation or verification
+The 2026-09-19 readability review compared 12 fully rerun notebooks and two
+using existing trained-model/site-CF products with their originals. Compared
+scientific results and CSV exports were unchanged. The other three retained
+their saved remote-data outputs; their local calculations or unchanged request
+code were checked separately. The two-archive compatibility check also passed
+on 2026-09-19. Site-CF checks used matching legacy weather caches whose original
+source-version metadata was absent. These records do not establish a clean installation or verification
 of files downloaded from Zenodo. Before declaring a reproducible release,
 check a fresh environment and the actual downloaded files, retain the report,
 and review attribution and the scientific limitations above. Earlier detailed
