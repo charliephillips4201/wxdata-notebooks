@@ -15,15 +15,10 @@ Midcontinent Independent System Operator.
 [Quick start](#quick-start) · [Notebook index](#notebook-index) ·
 [Data](#data) · [Interpretation](#interpretation) · [Sources and citation](#sources-and-citation)
 
-<details>
-<summary>Method overview</summary>
-
-![Weather and fleet inputs feed load and renewable models, scenario metrics, validation, and analysis.](documentation/process_flow.svg)
+![Weather and fleet inputs feed load and renewable models, scenario metrics, validation, and analysis.](process_flow.svg)
 
 These are method relationships. Each notebook reads its stated inputs;
 running one worked example does not generate all inputs for the next.
-
-</details>
 
 <a id="install-and-run-the-first-example"></a>
 
@@ -188,9 +183,6 @@ generation. Missing source mappings can yield zero modeled capacity. The
 validation flag identifies the cleaned 2023 load comparison, not validation
 of every product.
 
-<details>
-<summary>Historical entities: capacities, available products, and validation membership</summary>
-
 Wind/solar entries show nameplate MW and CF-file status: **nonzero**, **zero**
 (an all-zero placeholder), or **absent**. A zero placeholder is not a usable
 counterfactual resource profile. `has_load` denotes included modeled load;
@@ -313,8 +305,6 @@ nonzero solar profiles. The other 19 wind and three solar files are entirely
 zero; nine entities have neither dedicated CF file. Weather is present for 63
 entities. This distinction explains why counting files, capacity flags, and
 validation participants gives different totals.
-
-</details>
 
 <details>
 <summary>Pooled regions: membership and capacity</summary>
