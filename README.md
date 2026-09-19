@@ -5,7 +5,8 @@
 These 18 Jupyter notebooks explain how weather, electricity demand, and wind
 and solar resources are combined to study net load, resource sharing, and
 stress events. Read the saved tables and figures on GitHub, or run the
-examples locally. The first example uses only bundled data.
+examples locally. Released dataset inputs for the default examples are bundled;
+full Zenodo archives are optional.
 
 A **balancing authority (BA)** manages electricity supply and demand in a
 region. **Capacity factor (CF)** is output divided by nameplate capacity;
@@ -17,8 +18,20 @@ Midcontinent Independent System Operator.
 
 ![Weather and fleet inputs feed load and renewable models, scenario metrics, validation, and analysis.](process_flow.svg)
 
-These are method relationships. Each notebook reads its stated inputs;
-running one worked example does not generate all inputs for the next.
+The diagram shows how the methods relate.
+
+**Recommended walkthrough**
+
+1. Motivate synchronized weather inputs with [satellite and reanalysis context](notebooks/analysis/plot_satellite_and_reanalysis.ipynb).
+2. Convert load and renewable CF into [BA scenario metrics](notebooks/data_flow/ba_scenario_metrics_generation.ipynb).
+3. Combine five subregions into [MISO_NCA pooled metrics](notebooks/data_flow/pooled_scenario_metrics_generation.ipynb).
+4. Turn scenario metrics into [stress-event catalogs](notebooks/data_flow/ba_stress_event_catalog.ipynb).
+5. Review [MISO wind, solar, and load validation](notebooks/validation/miso_wind_solar_load_validation.ipynb) and [subregion load validation](notebooks/validation/miso_subregion_load_forecast_validation.ipynb).
+6. Apply the datasets to [monthly MISO events](notebooks/analysis/miso_monthly_event_counts.ipynb) and [pairwise pooling](notebooks/analysis/pairwise_pooling_heatmap.ipynb).
+
+These examples illustrate the methods; they do not form an executable pipeline.
+Each data example reads its own bundled inputs. The satellite/reanalysis
+notebook needs NASA/NOAA access.
 
 <a id="install-and-run-the-first-example"></a>
 
@@ -54,13 +67,16 @@ With Git and Conda installed, start in a short parent folder, such as
 Choose another example from the index below. Run its cells from top to bottom;
 the notebook folder is the working directory for its relative paths. Saved
 outputs support reading without installation, but rerunning requires the listed
-inputs and services.
+inputs and services. Weather acquisition and site-CF examples still need HSDS;
+satellite/reanalysis images need NASA/NOAA access, and model-training examples
+need TELL. Bundling inputs does not replace those services or software.
 
 ## Notebook index
 
-The repository includes **94 supporting data files and three manifests**.
-In the tables, **bundled** means included here; **historical** and **TaiESM1**
-refer to the two [downloadable collections](#data). All examples display
+The repository includes **94 supporting data files and 94 selected archive
+inputs**, with provenance and capacity manifests. In the tables, **bundled**
+means included here; **historical** and **TaiESM1** identify the source
+collections. See [Data](#data) for the included selections. All examples display
 results inline. Saved files go under
 `data_outputs/<category>/<notebook-stem>/` and are ignored by Git.
 
@@ -70,32 +86,32 @@ results inline. Saved files go under
 | --- | --- | --- |
 | [County weather-point selection](notebooks/data_flow/county_weather_point_selection.ipynb) | Bundled Arthur County Census/TIGER CSVs; HSDS grid metadata. | One population-weighted centroid and three grid IDs, inline. |
 | [County weather and BA aggregation](notebooks/data_flow/county_hsds_download_and_ba_weather_aggregation.ipynb) | Bundled county mapping, service territories, population; HSDS if one-hour weather caches are absent. | Weather HDF5 caches and one-hour MISO weather CSV; Iowa weighting example inline. |
-| [TELL load forecasting](notebooks/data_flow/tell_load_forecast_data_flow.ipynb) | Historical MISO weather; bundled raw load, validation metadata, and weather-source periods; TELL. | Training/prediction inputs, calibration, model files, 2007–2023 forecasts, held-out 2023 validation, two figures. |
+| [TELL load forecasting](notebooks/data_flow/tell_load_forecast_data_flow.ipynb) | Bundled historical MISO weather, raw load, validation metadata, and weather-source periods; TELL. | Training/prediction inputs, calibration, model files, 2007–2023 forecasts, held-out 2023 validation, two figures. |
 | [EIA-860 regridding](notebooks/data_flow/eia860_regridding_methodology.ipynb) | Bundled 2024 workbooks and reviewed subregion mapping; HSDS grid metadata. | MISO grid-point CSV and mapping summaries. |
 | [Site CF, weighting, and validation](notebooks/data_flow/site_cf_generation_ba_weighting_validation.ipynb) | Bundled 2022 fleet, SAM settings, renewable actuals, capacity manifest; reV/PySAM; HSDS if site-weather caches are absent. | Site-weather/CF HDF5 files, weighted MISO CF CSVs, validation metrics and figure; Iowa subset example. |
-| [BA scenario metrics](notebooks/data_flow/ba_scenario_metrics_generation.ipynb) | Historical MISO load/CF/scenarios; bundled metadata, losses, raw MISO load, 2022 renewable actuals/capacities. | Reconstructed MISO scenario CSV, June 2022 comparison figure, and archive checks. |
-| [Pooled scenario metrics](notebooks/data_flow/pooled_scenario_metrics_generation.ipynb) | Historical scenario files for five MISO North/Central subregions and the released MISO_NCA pool; bundled BA capacity metadata. | Reconstructed MISO_NCA scenario CSV for 2007–2023, hourly previews, and archive checks. |
-| [Stress-event catalogs](notebooks/data_flow/ba_stress_event_catalog.ipynb) | Historical BA/pooled scenarios and bundled manifests. | Toy calculations and four regional event CSVs: SWPP, MISO_8910, MISO_SUBREGION_SUM, WECC. |
-| [State load generation](notebooks/data_flow/state_load_generation.ipynb) | TaiESM1 BA/Iowa load; bundled county mapping/population and selected GCAM case; TELL. | One Iowa year/case reconstruction, staging files, archive comparison, load plots, and nine archived annual trajectories. |
+| [BA scenario metrics](notebooks/data_flow/ba_scenario_metrics_generation.ipynb) | Bundled historical MISO load/CF/scenarios, metadata, losses, raw MISO load, and 2022 renewable actuals/capacities. | Reconstructed MISO scenario CSV, June 2022 comparison figure, and archive checks. |
+| [Pooled scenario metrics](notebooks/data_flow/pooled_scenario_metrics_generation.ipynb) | Bundled installed-generation files for five MISO North/Central subregions, full MISO_NCA scenarios, and BA capacity metadata. | Reconstructed MISO_NCA scenario CSV for 2007–2023, hourly previews, and archive checks. |
+| [Stress-event catalogs](notebooks/data_flow/ba_stress_event_catalog.ipynb) | Bundled historical BA/pooled scenario inputs and manifests. | Toy calculations and four regional event CSVs: SWPP, MISO_8910, MISO_SUBREGION_SUM, WECC. |
+| [State load generation](notebooks/data_flow/state_load_generation.ipynb) | Bundled TaiESM1 BA/Iowa load, county mapping/population, and selected GCAM case; TELL. | One Iowa year/case reconstruction, staging files, archive comparison, load plots, and nine archived annual trajectories. |
 
 ### Validation — 5 notebooks
 
 | Notebook | Inputs and requirements | Outputs |
 | --- | --- | --- |
 | [MISO load-duration curve](notebooks/validation/miso_load_duration_curve.ipynb) | Bundled raw-value columns in six cleaned observation files and six saved subregion forecasts. | Load-duration PNG; no download or training needed. |
-| [All-BA 2023 load validation](notebooks/validation/all_ba_2023_load_forecast_validation.ipynb) | Historical BA load; 58 bundled cleaned-observation CSVs and validation metadata. | Coverage, complete metric table, three scatter plots; inline only. |
-| [MISO subregion load validation](notebooks/validation/miso_subregion_load_forecast_validation.ipynb) | Historical direct-MISO and six subregion forecasts; bundled cleaned MISO actuals. | Coverage, metrics, scatter plot; inline only. |
-| [MISO wind, solar, and load validation](notebooks/validation/miso_wind_solar_load_validation.ipynb) | Historical MISO load; bundled 2022 fleet CF/capacities, raw load, renewable actuals. | Full-year loss-sensitivity metric CSV and January comparison PNG. |
-| [Iowa historical/TaiESM1 comparison](notebooks/validation/state_historical_taiesm_validation.ipynb) | Iowa weather, load, wind CF, and solar CF from both collections. | Coverage, component diagnostics, duration curves; inline only. |
+| [All-BA 2023 load validation](notebooks/validation/all_ba_2023_load_forecast_validation.ipynb) | Bundled 2023 load forecasts for 58 entities, cleaned observations, and validation metadata. | Coverage, complete metric table, three scatter plots; inline only. |
+| [MISO subregion load validation](notebooks/validation/miso_subregion_load_forecast_validation.ipynb) | Bundled direct-MISO and six subregion forecasts, plus cleaned MISO actuals. | Coverage, metrics, scatter plot; inline only. |
+| [MISO wind, solar, and load validation](notebooks/validation/miso_wind_solar_load_validation.ipynb) | Bundled historical MISO load, 2022 fleet CF/capacities, raw load, and renewable actuals. | Full-year loss-sensitivity metric CSV and January comparison PNG. |
+| [Iowa historical/TaiESM1 comparison](notebooks/validation/state_historical_taiesm_validation.ipynb) | Bundled Iowa weather, load, wind CF, and solar CF for the shared 2007–2023 period. | Coverage, component diagnostics, duration curves; inline only. |
 
 ### Analysis — 4 notebooks
 
 | Notebook | Inputs and requirements | Outputs |
 | --- | --- | --- |
-| [Pairwise pooling heatmaps](notebooks/analysis/pairwise_pooling_heatmap.ipynb) | Historical BA and pooled scenarios. | Ordered-pair metric CSV and nine heatmaps: four main and five portfolio appendices. |
-| [Monthly MISO event counts](notebooks/analysis/miso_monthly_event_counts.ipynb) | Historical direct-MISO stress-event catalog. | One three-panel figure; inline only. |
+| [Pairwise pooling heatmaps](notebooks/analysis/pairwise_pooling_heatmap.ipynb) | Bundled historical scenario columns for 10 BAs and MISO_SUBREGION_SUM. | Ordered-pair metric CSV and nine heatmaps: four main and five portfolio appendices. |
+| [Monthly MISO event counts](notebooks/analysis/miso_monthly_event_counts.ipynb) | Bundled full historical direct-MISO stress-event catalog. | One three-panel figure; inline only. |
 | [Satellite and reanalysis context](notebooks/analysis/plot_satellite_and_reanalysis.ipynb) | NASA Worldview and NOAA PSL network access. | Five embedded images; no saved files. |
-| [Iowa seasonal risk hours](notebooks/analysis/state_seasonal_risk_hours.ipynb) | TaiESM1 Iowa scenario metrics, using raw net load and equivalent renewable CF. | A 240-row CSV and six portfolio PNGs. |
+| [Iowa seasonal risk hours](notebooks/analysis/state_seasonal_risk_hours.ipynb) | Bundled TaiESM1 Iowa raw net load and equivalent renewable CF, all six scenarios and 2000–2099. | A 240-row CSV and six portfolio PNGs. |
 
 **Example boundaries.** The one-hour weather example does not supply TELL's
 full historical inputs. The regridding example covers MISO 2024, while site-CF
@@ -111,24 +127,61 @@ figure reads all nine archived trajectories rather than reconstructing them.
 
 | Folder | Purpose |
 | --- | --- |
-| `data_inputs/` | Bundled supporting files and extracted Zenodo datasets. Precomputed reference products are inputs to these examples. |
-| `data_outputs/` | Figures, tables, models, and caches created by running notebooks; contents are ignored by Git. |
+| `data_inputs/` | Supporting observations, fleet files, mappings, and model settings. |
+| `data_inputs/examples/` | Selected archive inputs needed by the default notebooks; included in the clone. |
+| `data_outputs/` | Figures, tables, models, and acquisition caches created by notebooks; ignored by Git. |
 
-When updating an older checkout, move downloaded dataset folders from `data/`
-to `data_inputs/` and existing results from `notebook_outputs/` to `data_outputs/`.
-Git updates the bundled inputs automatically.
+### Bundled notebook inputs
+
+The **94 archive-derived input files total 457 MB**. Notebooks read
+compressed CSV (`.csv.gz`) and Parquet files directly; no download or extraction
+is needed. The [input manifest](manifests/notebook_inputs.csv) lists each file's
+source, selected columns, years and scenarios, notebook users, and SHA-256 hashes.
+Dataset folder names identify the source collection; the manifest records the
+coverage actually included. Blank year or scenario fields mean no filtering on
+that field.
+
+| Example group | Included archive inputs |
+| --- | --- |
+| MISO reconstruction and pooling | Historical MISO weather, load, CF, and all six scenarios; installed generation from the five North/Central members; all six MISO_NCA scenarios. Both reconstruction comparisons retain all 893,520 rows. |
+| Load validation | 2023 forecasts for all 58 validation entities, including direct MISO and six subregions. MISO's file retains 2007–2023 because reconstruction also uses it. |
+| Regional stress and pooling analysis | Required scenario columns for the 10-BA pairwise set, MISO_SUBREGION_SUM, MISO_8910, and WECC; full historical MISO event catalog. All example years and scenarios are retained. |
+| Iowa component validation | Historical and TaiESM1 weather, raw load, wind CF, and solar CF for 2007–2023. |
+| Iowa projections | Three contributing BA loads for 2039; Iowa's nine load cases for 2000–2099; six scenarios' raw net load and equivalent renewable CF for the full century. |
+
+Selection and lossless compression preserve the source numbers, precision,
+and calendars; no scientific values are recalculated. Notebook calendar
+alignment and full reference comparisons remain in place. The bundled archive
+inputs retain the [dataset license](data_inputs/examples/LICENSE_DATA.txt).
+
+<details>
+<summary>Optional: rebuild the bundled inputs</summary>
+
+Maintainers can rebuild the selection from a folder containing the two extracted
+dataset directories:
+
+```powershell
+python scripts/build_notebook_inputs.py --source-dir "C:/path/to/extracted/data"
+```
+
+</details>
 
 Dataset version **0.1.0**: [Zenodo DOI 10.5281/zenodo.21844870](https://doi.org/10.5281/zenodo.21844870).
 See the [publication status](#verification-and-publication-status) below.
 
-| Collection | Sources and period | Coverage |
+| Collection | Sources and period | Full archive coverage |
 | --- | --- | --- |
 | Historical | WTK wind/load weather, 2007–2014; BC-HRRR wind/load weather, 2015–2023; NSRDB solar resource and GHI, 2007–2023. | 68 entities (62 BAs and six MISO subregions), five pools, and state products for the lower 48 states plus DC; availability varies. |
 | TaiESM1 | sup3rCC v0.2.2: simulated historical climate, 2000–2014, then SSP2-4.5, 2015–2099. | AECI, SWPP, six MISO subregions, their combined pool, and Iowa. |
 
+<details>
+<summary>Optional: download and verify the full archives</summary>
+
 ### Download and extract
 
-Keep these five files together in a download folder:
+**Optional:** use the full Zenodo collections for regions, years, or columns
+outside the bundled selections. Keep these five files together in a download
+folder:
 
 - `wxdata_wtk_bchrrr_nsrdb_2007_2023.zip`
 - `wxdata_sup3rcc_taiesm1_curated_2000_2099.zip`
@@ -136,8 +189,8 @@ Keep these five files together in a download folder:
 - `LICENSE_DATA.txt`
 - `RELEASE_MANIFEST.csv`
 
-The archives total about 9.3 GB. Extract the collection required by your
-notebook into `data_inputs/`, using these commands from the repository root:
+The archives total about 9.3 GB. Extract the collection you need from the
+repository root:
 
 ```powershell
 python -m zipfile -e "C:/path/to/wxdata_wtk_bchrrr_nsrdb_2007_2023.zip" "data_inputs"
@@ -145,13 +198,16 @@ python -m zipfile -e "C:/path/to/wxdata_sup3rcc_taiesm1_curated_2000_2099.zip" "
 ```
 
 The resulting folders are `data_inputs/wtk_bchrrr_nsrdb_2007_2023/` and
-`data_inputs/taiesm1_historical_ssp245_v022_2000_2099/`, alongside the bundled inputs.
-The archive checker below can run without full extraction. Keep downloaded
-datasets, acquisition caches, generated outputs, and credentials out of Git.
+`data_inputs/taiesm1_historical_ssp245_v022_2000_2099/`, separate from `examples/`.
+Point the notebook's input paths at the desired full-archive files; archived
+CSVs use `.csv`, while bundled CSVs use `.csv.gz`. Changing a region or year can
+also require its matching metadata and observations. Full archives, acquisition
+caches, generated outputs, and credentials remain excluded from Git.
 
 ### Verify the download
 
-With the environment active, run from the repository root:
+This optional check verifies full archives; it is not needed to run the bundled
+examples. With the environment active, run from the repository root:
 
 ```powershell
 python scripts/check_release.py --archive-dir "C:/path/to/zenodo-files" --source-kind zenodo
@@ -160,8 +216,8 @@ python scripts/check_release.py --archive-dir "C:/path/to/zenodo-files" --source
 For locally prepared archives, use `--source-kind local`. This label records
 where you obtained the files; the checker does not download or authenticate
 them. It verifies sizes and SHA-256 hashes for both ZIPs, the dataset
-README/license, and two extracted inputs, then executes two fresh kernels
-using the active Python interpreter:
+README/license, and two extracted reference inputs, then runs two fresh kernels
+against those archive inputs using the active Python interpreter:
 
 - **Monthly MISO events:** six portfolios, 2007–2023, 3,672 monthly grid rows,
   conserved event counts, and one figure.
@@ -176,9 +232,12 @@ and results. This verifies compatibility for two notebooks; it does not
 establish a clean installation, validate all products, or resolve scientific
 limitations.
 
+</details>
+
 ### Coverage
 
-Coverage describes the **2024 operable onshore-wind/PV reference fleet**.
+The tables describe the **full archives**, not just the bundled example inputs.
+Coverage uses the **2024 operable onshore-wind/PV reference fleet**.
 "Load only" means no modeled wind/PV in that fleet, not an absence of other
 generation. Missing source mappings can yield zero modeled capacity. The
 validation flag identifies the cleaned 2023 load comparison, not validation
@@ -442,17 +501,18 @@ The release preparation reserved the dataset DOI; a branch or reserved DOI
 alone does not establish publication. Use the linked record for availability
 and retain the exact notebook commit and manifest with your results.
 
-The 2026-09-19 readability review compared 12 fully rerun notebooks and two
-using existing trained-model/site-CF products with their originals. Compared
-scientific results and CSV exports were unchanged. The other three retained
-their saved remote-data outputs; their local calculations or unchanged request
-code were checked separately. The two-archive compatibility check also passed
-on 2026-09-19. Site-CF checks used matching legacy weather caches whose original
-source-version metadata was absent. These records do not establish a clean installation or verification
-of files downloaded from Zenodo. Before declaring a reproducible release,
-check a fresh environment and the actual downloaded files, retain the report,
-and review attribution and the scientific limitations above. Earlier detailed
-execution notes remain in Git history and the pinned release revision.
+The 2026-09-19 bundled-input check verified all 94 files against their released
+sources. Eleven notebooks ran from fresh kernels using both the original inputs
+and the bundle: compared results matched exactly, as did all 38 exported CSVs
+and figures. TELL's prepared inputs also matched; its models were not retrained.
+Remote-data acquisition was not rerun for this change.
+
+Earlier readability and two-archive compatibility checks are recorded in Git
+history and the pinned release revision. Site-CF checks used legacy weather
+caches without original source-version metadata. These checks do not establish
+a clean installation or verification of files downloaded from Zenodo. Before
+declaring a reproducible release, check a fresh environment and the downloaded
+files, retain the report, and review attribution and the limitations above.
 
 **AI assistance:** generative AI assisted with notebook code and documentation.
 Charlie Phillips reviewed and accepted the work and remains responsible for

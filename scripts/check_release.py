@@ -10,6 +10,7 @@ import argparse
 import base64
 import csv
 from datetime import datetime, timezone
+import gzip
 import hashlib
 from importlib import metadata
 import json
@@ -97,7 +98,7 @@ def prepare_inputs(archive_dir, stage, report):
     for archive_name, member in NOTEBOOKS.values():
         row = one_row(rows, "data_file", member)
         require(row["archive_name"] == archive_name, f"Wrong archive for {member}")
-        target = stage / "data_inputs" / member
+        target = stage / "data_inputs" / "examples" / member
         target.parent.mkdir(parents=True, exist_ok=True)
         with zipfile.ZipFile(archive_dir / archive_name) as archive:
             require(archive.namelist().count(member) == 1, f"Expected one ZIP member: {member}")
@@ -106,6 +107,11 @@ def prepare_inputs(archive_dir, stage, report):
             with archive.open(member) as source, target.open("wb") as output:
                 shutil.copyfileobj(source, output, 8 * 1024 * 1024)
         report["verified_files"].append(verify_file(target, row))
+        # Verify original archive bytes before adapting CSV storage to the notebook input path.
+        if target.suffix == ".csv":
+            with target.open("rb") as source, target.with_suffix(".csv.gz").open("wb") as output:
+                with gzip.GzipFile(filename="", mode="wb", fileobj=output, mtime=0) as compressed:
+                    shutil.copyfileobj(source, compressed, 8 * 1024 * 1024)
 
 
 def validate_summary(path):
@@ -257,7 +263,9 @@ def write_report(output_dir, report, replacements):
         lines.append(f"| [{Path(notebook['notebook']).stem}]({notebook['executed_notebook']}) "
                      f"| {notebook['status'].upper()} | {notebook.get('execution_seconds', '')} |")
     lines += ["", "Successful checks verify both archive hashes and sizes, loose README/license metadata, "
-              "and the hashes of the two selected extracted inputs. Each notebook runs in a fresh kernel "
+              "and the hashes of the two selected extracted inputs. These complete source files are staged "
+              "at the notebooks' example-input paths; CSV inputs are gzip-compressed without changing their content. "
+              "Each notebook runs in a fresh kernel "
               "using this command's Python interpreter and only those staged dataset inputs.", "",
               "The MISO check requires its existing coverage/count assertions and one fresh embedded PNG. "
               "The Iowa check requires its existing hourly/count assertions, a complete 240-row, seven-column "

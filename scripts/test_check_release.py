@@ -1,6 +1,8 @@
 """Focused failure checks: python -m unittest discover -s scripts -p 'test_*.py'."""
 
 import csv
+import gzip
+import hashlib
 import importlib.util
 import itertools
 import json
@@ -8,6 +10,7 @@ from pathlib import Path
 import tempfile
 import unittest
 from unittest.mock import patch
+import zipfile
 
 SPEC = importlib.util.spec_from_file_location("check_release", Path(__file__).with_name("check_release.py"))
 CHECK = importlib.util.module_from_spec(SPEC)
@@ -15,6 +18,54 @@ SPEC.loader.exec_module(CHECK)
 
 
 class ReleaseCheckFailures(unittest.TestCase):
+    def test_archive_inputs_are_verified_before_staging_at_example_paths(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            rows = []
+            source_bytes = {}
+            for name, (archive_name, member) in CHECK.NOTEBOOKS.items():
+                content = b"time_utc,value\n2023-01-01T00:00:00Z,1.234567890123\n" if member.endswith(".csv") else b"PAR1 unchanged parquet bytes PAR1"
+                source_bytes[member] = content
+                with zipfile.ZipFile(root / archive_name, "w") as archive:
+                    archive.writestr(member, content)
+                rows.append({"record_type": "data_file", "archive_name": archive_name,
+                             "relative_path": member, "size_bytes": len(content),
+                             "sha256": hashlib.sha256(content).hexdigest(), "validation_status": "pass"})
+            for name in ("README_DATASET.md", "LICENSE_DATA.txt", *CHECK.ARCHIVES):
+                path = root / name
+                if not name.endswith(".zip"):
+                    path.write_bytes(b"release documentation")
+                rows.append({"record_type": "archive" if name.endswith(".zip") else "loose_file",
+                             "archive_name": "", "relative_path": name, "size_bytes": path.stat().st_size,
+                             "sha256": CHECK.sha256(path), "validation_status": "pass"})
+            manifest = root / "RELEASE_MANIFEST.csv"
+            with manifest.open("w", newline="", encoding="utf-8") as stream:
+                writer = csv.DictWriter(stream, fieldnames=list(rows[0]))
+                writer.writeheader()
+                writer.writerows(rows)
+
+            report = {"verified_files": []}
+            CHECK.prepare_inputs(root, root / "stage", report)
+            self.assertEqual(len(report["verified_files"]), 6)
+            for member, content in source_bytes.items():
+                target = root / "stage" / "data_inputs" / "examples" / member
+                self.assertEqual(target.read_bytes(), content)
+                if target.suffix == ".csv":
+                    compressed = target.with_suffix(".csv.gz")
+                    self.assertEqual(gzip.decompress(compressed.read_bytes()), content)
+                    self.assertEqual(compressed.read_bytes()[4:8], b"\x00\x00\x00\x00")
+
+            # Valid archive hashes must not conceal a bad manifest hash for an extracted source file.
+            rows[0]["sha256"] = "0" * 64
+            with manifest.open("w", newline="", encoding="utf-8") as stream:
+                writer = csv.DictWriter(stream, fieldnames=list(rows[0]))
+                writer.writeheader()
+                writer.writerows(rows)
+            with self.assertRaisesRegex(ValueError, "SHA-256 mismatch"):
+                CHECK.prepare_inputs(root, root / "corrupt-stage", {"verified_files": []})
+            bad_csv = root / "corrupt-stage" / "data_inputs" / "examples" / rows[0]["relative_path"]
+            self.assertFalse(bad_csv.with_suffix(".csv.gz").exists())
+
     def test_tagged_cell_error_is_rejected_and_executed_notebook_is_retained(self):
         import nbformat
 

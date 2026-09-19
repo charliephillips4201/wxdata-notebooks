@@ -21,6 +21,7 @@ notebooks/**/outputs/
 *.hdf5
 *.nc
 *.parquet
+!data_inputs/examples/**/*.parquet
 *.feather
 
 # Local archives, logs, and operating-system files
