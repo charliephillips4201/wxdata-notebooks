@@ -10,34 +10,8 @@ directly on GitHub.
 
 ![Weather and fleet inputs feed load and renewable models, scenario metrics, validation, and analysis.](process_flow.svg)
 
-**Suggested review order:**
-
-1. [Weather motivation](notebooks/analysis/plot_satellite_and_reanalysis.ipynb).
-2. [Balancing authority (BA) scenarios](notebooks/data_flow/ba_scenario_metrics_generation.ipynb) and [MISO_NCA pooling](notebooks/data_flow/pooled_scenario_metrics_generation.ipynb).
-3. [Stress-event catalogs](notebooks/data_flow/ba_stress_event_catalog.ipynb).
-4. [MISO wind, solar, and load validation](notebooks/validation/miso_wind_solar_load_validation.ipynb) and [subregion validation](notebooks/validation/miso_subregion_load_forecast_validation.ipynb).
-5. [Monthly stress events](notebooks/analysis/miso_monthly_event_counts.ipynb) and [pairwise pooling](notebooks/analysis/pairwise_pooling_heatmap.ipynb).
-
-[Quick start](#quick-start) · [All notebooks](#notebook-index) · [Data and coverage](#data) · [Interpretation](#interpretation) · [Citation](#sources-and-citation)
-
+<a id="quick-start"></a>
 <a id="install-and-run-the-first-example"></a>
-
-## Quick start
-
-To rerun the examples, install Git and Conda. On Windows, use a short parent
-folder such as `C:/work`.
-
-```powershell
-git clone https://github.com/charliephillips4201/wxdata-notebooks.git
-cd wxdata-notebooks
-conda env create -f environment.yml
-conda activate wxdata-notebooks
-jupyter lab notebooks/validation/miso_load_duration_curve.ipynb
-```
-
-Select **Restart Kernel and Run All**. Each notebook reads its own inputs;
-run from its notebook directory. Default data examples use bundled files.
-External-service requirements are listed below.
 
 ## Notebook index
 
@@ -91,7 +65,7 @@ records their sources, selections, and checksums.
 The full [Zenodo dataset](https://doi.org/10.5281/zenodo.21844870) contains two
 CSV/Parquet collections, with a README, data license, and checksum manifest.
 
-| Collection | Weather sources and period | Coverage |
+| Collection | Weather sources | Coverage |
 | --- | --- | --- |
 | Historical, 2007–2023 | WTK, 2007–2014; BC-HRRR, 2015–2023; NSRDB solar, 2007–2023. | 68 BA-level entities, five pools, and the lower 48 states plus DC. |
 | TaiESM1, 2000–2099 | Sup3rCC v0.2.2: historical experiment, 2000–2014; SSP2-4.5, 2015–2099. | AECI, SWPP, six MISO subregions, MISO_SUBREGION_SUM, and Iowa. |
@@ -100,137 +74,132 @@ CSV/Parquet collections, with a README, data license, and checksum manifest.
 
 **Historical archive availability:**
 
-| Entity group | Entities | Load | Wind CF | Solar CF |
+| Group | Entities | Load | Wind CF | Solar CF |
 | --- | ---: | ---: | ---: | ---: |
 | BA codes and MISO subregions | 68 | 60 | 40 | 56 |
 | BA pools | 5 | 5 | 5 | 5 |
 | Contiguous states and District of Columbia | 49 | 49 | 40 | 48 |
 
-The 68 BA-level entities comprise **62 BA codes and six MISO subregions**.
-Wind/solar counts include only nonzero profiles. Coverage reflects the modeled
-2024 onshore-wind/PV fleet and available mappings, not every physical resource.
-Pool load and CF are columns within pooled scenario metrics.
+The 68 BA-level entities comprise **62 balancing authority (BA) codes and six
+MISO subregions**. Counts describe the full historical archive; wind/solar
+counts exclude zero profiles. Coverage reflects the modeled 2024 onshore-wind/PV
+fleet and available mappings, not every physical resource.
 
-Below, wind/solar cells give nameplate MW and CF status. **Zero** means an
-all-zero placeholder, not a usable counterfactual profile; **absent** means no
-CF file. The validation column refers only to the 2023 load comparison:
-58 of the 60 load entities participate; AEC and NSB lack usable packaged actuals.
-Every listed entity has scenario metrics and a stress catalog.
+In the tables below, **x** means modeled load is available; **—** means it is
+not. Wind and solar values are **nameplate capacity in MW**, not generation.
+Positive capacity has a nonzero CF profile; **0.0** means the CF file is absent
+or an all-zero placeholder, not a usable counterfactual profile.
 
-#### Load + wind + solar (35)
+<a id="load--wind--solar-35"></a>
+<a id="load--solar-only-16"></a>
+<a id="load-only-9"></a>
+<a id="wind-and-solar-only-2"></a>
+<a id="solar-only-3"></a>
+<a id="wind-only-3"></a>
 
-| Entity | Release name | Wind MW / CF | Solar MW / CF | Weather / load files | Scenarios | 2023 load validation |
-| --- | --- | --- | --- | --- | --- | --- |
-| `AECI` | Associated Electric Cooperative, Inc. | 959.4 / nonzero | 1.5 / nonzero | yes / yes | 6 | yes |
-| `AVA` | Avista Corporation | 349.3 / nonzero | 19.2 / nonzero | yes / yes | 6 | yes |
-| `AZPS` | Arizona Public Service Company | 628.5 / nonzero | 919.5 / nonzero | yes / yes | 6 | yes |
-| `BPAT` | Bonneville Power Administration | 3,617.1 / nonzero | 223.7 / nonzero | yes / yes | 6 | yes |
-| `CISO` | California Independent System Operator | 6,352.2 / nonzero | 22,166.7 / nonzero | yes / yes | 6 | yes |
-| `EPE` | El Paso Electric Company | 50.4 / nonzero | 251.3 / nonzero | yes / yes | 6 | yes |
-| `ERCO` | Electric Reliability Council of Texas, Inc. | 38,566.7 / nonzero | 22,179.5 / nonzero | yes / yes | 6 | yes |
-| `IPCO` | Idaho Power Company | 714.7 / nonzero | 580.9 / nonzero | yes / yes | 6 | yes |
-| `ISNE` | ISO New England Inc. | 1,510.2 / nonzero | 3,307.1 / nonzero | yes / yes | 6 | yes |
-| `LDWP` | Los Angeles Department of Water and Power | 440.5 / nonzero | 1,317.5 / nonzero | yes / yes | 6 | yes |
-| `MISO` | Midcontinent Independent System Operator, Inc. | 32,150.7 / nonzero | 13,574.9 / nonzero | yes / yes | 6 | yes |
-| `MISO_0001` | MISO subregion 0001 | 9,732.7 / nonzero | 1,647.6 / nonzero | yes / yes | 6 | yes |
-| `MISO_0004` | MISO subregion 0004 | 2,768.8 / nonzero | 2,467.1 / nonzero | yes / yes | 6 | yes |
-| `MISO_0006` | MISO subregion 0006 | 1,441.5 / nonzero | 1,348.6 / nonzero | yes / yes | 6 | yes |
-| `MISO_0027` | MISO subregion 0027 | 4,603.7 / nonzero | 3,248.9 / nonzero | yes / yes | 6 | yes |
-| `MISO_0035` | MISO subregion 0035 | 13,419.5 / nonzero | 1,069.0 / nonzero | yes / yes | 6 | yes |
-| `MISO_8910` | MISO subregion 8910 | 184.5 / nonzero | 3,793.7 / nonzero | yes / yes | 6 | yes |
-| `NEVP` | Nevada Power Company | 150.0 / nonzero | 3,980.2 / nonzero | yes / yes | 6 | yes |
-| `NWMT` | NorthWestern Energy | 763.6 / nonzero | 179.0 / nonzero | yes / yes | 6 | yes |
-| `NYIS` | New York Independent System Operator | 2,739.3 / nonzero | 2,517.4 / nonzero | yes / yes | 6 | yes |
-| `PACE` | PacifiCorp - East | 3,984.8 / nonzero | 2,196.4 / nonzero | yes / yes | 6 | yes |
-| `PACW` | PacifiCorp - West | 489.9 / nonzero | 477.1 / nonzero | yes / yes | 6 | yes |
-| `PGE` | Portland General Electric Company | 716.5 / nonzero | 189.7 / nonzero | yes / yes | 6 | yes |
-| `PJM` | PJM Interconnection, LLC | 11,451.6 / nonzero | 14,791.3 / nonzero | yes / yes | 6 | yes |
-| `PNM` | Public Service Company of New Mexico | 2,569.0 / nonzero | 1,784.0 / nonzero | yes / yes | 6 | yes |
-| `PSCO` | Public Service Company of Colorado | 4,692.3 / nonzero | 2,116.3 / nonzero | yes / yes | 6 | yes |
-| `PSEI` | Puget Sound Energy | 868.4 / nonzero | 15.5 / nonzero | yes / yes | 6 | yes |
-| `SPA` | Southwestern Power Administration | 499.0 / nonzero | 19.5 / nonzero | yes / yes | 6 | yes |
-| `SRP` | Salt River Project | 226.0 / nonzero | 1,674.9 / nonzero | yes / yes | 6 | yes |
-| `SWPP` | Southwest Power Pool | 33,803.1 / nonzero | 869.6 / nonzero | yes / yes | 6 | yes |
-| `TEPC` | Tucson Electric Power Company | 379.8 / nonzero | 492.2 / nonzero | yes / yes | 6 | yes |
-| `TVA` | Tennessee Valley Authority | 1.8 / nonzero | 1,308.8 / nonzero | yes / yes | 6 | yes |
-| `WACM` | Western Area Power Administration - Rocky Mountain Region | 1,466.9 / nonzero | 567.3 / nonzero | yes / yes | 6 | yes |
-| `WALC` | Western Area Power Administration - Desert Southwest Region | 350.0 / nonzero | 340.7 / nonzero | yes / yes | 6 | yes |
-| `WAUW` | Western Area Power Administration UGP West | 71.4 / nonzero | 80.0 / nonzero | yes / yes | 6 | yes |
+#### Balancing authorities and MISO subregions
 
-#### Load + solar only (16)
+| Name | Code | Load | Wind MW | Solar MW |
+| --- | --- | :---: | ---: | ---: |
+| PowerSouth Energy Cooperative | `AEC` | x | 0.0 | 0.0 |
+| Associated Electric Cooperative, Inc. | `AECI` | x | 959.4 | 1.5 |
+| Avista Corporation | `AVA` | x | 349.3 | 19.2 |
+| Avangrid Renewables LLC | `AVRN` | — | 1,695.9 | 322.0 |
+| Arizona Public Service Company | `AZPS` | x | 628.5 | 919.5 |
+| Balancing Authority of Northern California | `BANC` | x | 0.0 | 338.6 |
+| Bonneville Power Administration | `BPAT` | x | 3,617.1 | 223.7 |
+| Public Utility District No. 1 of Chelan County | `CHPD` | x | 0.0 | 0.0 |
+| California Independent System Operator | `CISO` | x | 6,352.2 | 22,166.7 |
+| Duke Energy Progress East | `CPLE` | x | 0.0 | 2,922.5 |
+| Duke Energy Progress West | `CPLW` | — | 0.0 | 28.4 |
+| Public Utility District No. 1 of Douglas County | `DOPD` | x | 0.0 | 0.0 |
+| Duke Energy Carolinas | `DUK` | x | 0.0 | 2,157.1 |
+| El Paso Electric Company | `EPE` | x | 50.4 | 251.3 |
+| Electric Reliability Council of Texas, Inc. | `ERCO` | x | 38,566.7 | 22,179.5 |
+| Florida Municipal Power Pool | `FMPP` | x | 0.0 | 166.9 |
+| Duke Energy Florida Inc. | `FPC` | x | 0.0 | 1,936.9 |
+| Florida Power & Light Company | `FPL` | x | 0.0 | 7,192.3 |
+| Public Utility District No. 2 of Grant County, Washington | `GCPD` | x | 0.0 | 0.0 |
+| Gridforce South | `GRIS` | — | 324.3 | 0.0 |
+| Gainesville Regional Utilities | `GVL` | x | 0.0 | 4.8 |
+| NaturEner Power Watch, LLC | `GWA` | — | 210.0 | 0.0 |
+| Hawaiian Electric Co Inc | `HECO` | — | 0.0 | 319.1 |
+| City of Homestead | `HST` | x | 0.0 | 0.0 |
+| Imperial Irrigation District | `IID` | x | 0.0 | 543.2 |
+| Idaho Power Company | `IPCO` | x | 714.7 | 580.9 |
+| ISO New England Inc. | `ISNE` | x | 1,510.2 | 3,307.1 |
+| JEA | `JEA` | x | 0.0 | 38.1 |
+| Los Angeles Department of Water and Power | `LDWP` | x | 440.5 | 1,317.5 |
+| Louisville Gas and Electric Company and Kentucky Utilities Company | `LGEE` | x | 0.0 | 18.1 |
+| Midcontinent Independent System Operator, Inc. | `MISO` | x | 32,150.7 | 13,574.9 |
+| MISO subregion 0001 | `MISO_0001` | x | 9,732.7 | 1,647.6 |
+| MISO subregion 0004 | `MISO_0004` | x | 2,768.8 | 2,467.1 |
+| MISO subregion 0006 | `MISO_0006` | x | 1,441.5 | 1,348.6 |
+| MISO subregion 0027 | `MISO_0027` | x | 4,603.7 | 3,248.9 |
+| MISO subregion 0035 | `MISO_0035` | x | 13,419.5 | 1,069.0 |
+| MISO subregion 8910 | `MISO_8910` | x | 184.5 | 3,793.7 |
+| New Brunswick System Operator | `NBSO` | — | 42.0 | 17.9 |
+| Nevada Power Company | `NEVP` | x | 150.0 | 3,980.2 |
+| New Smyrna Beach Utilities Commission | `NSB` | x | 0.0 | 0.0 |
+| NorthWestern Energy | `NWMT` | x | 763.6 | 179.0 |
+| New York Independent System Operator | `NYIS` | x | 2,739.3 | 2,517.4 |
+| PacifiCorp - East | `PACE` | x | 3,984.8 | 2,196.4 |
+| PacifiCorp - West | `PACW` | x | 489.9 | 477.1 |
+| Portland General Electric Company | `PGE` | x | 716.5 | 189.7 |
+| PJM Interconnection, LLC | `PJM` | x | 11,451.6 | 14,791.3 |
+| Public Service Company of New Mexico | `PNM` | x | 2,569.0 | 1,784.0 |
+| Public Service Company of Colorado | `PSCO` | x | 4,692.3 | 2,116.3 |
+| Puget Sound Energy | `PSEI` | x | 868.4 | 15.5 |
+| South Carolina Public Service Authority | `SC` | x | 0.0 | 303.3 |
+| Dominion Energy South Carolina | `SCEG` | x | 0.0 | 1,044.1 |
+| Seattle City Light | `SCL` | x | 0.0 | 0.0 |
+| Seminole Electric Cooperative | `SEC` | x | 0.0 | 74.5 |
+| Southeastern Power Administration | `SEPA` | — | 0.0 | 275.0 |
+| Southern Company Services, Inc. - Transmission | `SOCO` | x | 0.0 | 5,485.9 |
+| Southwestern Power Administration | `SPA` | x | 499.0 | 19.5 |
+| Salt River Project | `SRP` | x | 226.0 | 1,674.9 |
+| Southwest Power Pool | `SWPP` | x | 33,803.1 | 869.6 |
+| City of Tallahassee | `TAL` | x | 0.0 | 62.0 |
+| Tampa Electric Company | `TEC` | x | 0.0 | 1,356.4 |
+| Tucson Electric Power Company | `TEPC` | x | 379.8 | 492.2 |
+| Turlock Irrigation District | `TIDC` | x | 0.0 | 0.0 |
+| City of Tacoma Department of Public Utilities Light Division | `TPWR` | x | 0.0 | 0.0 |
+| Tennessee Valley Authority | `TVA` | x | 1.8 | 1,308.8 |
+| Western Area Power Administration - Rocky Mountain Region | `WACM` | x | 1,466.9 | 567.3 |
+| Western Area Power Administration - Desert Southwest Region | `WALC` | x | 350.0 | 340.7 |
+| Western Area Power Administration UGP West | `WAUW` | x | 71.4 | 80.0 |
+| NaturEner Wind Watch, LLC | `WWA` | — | 189.0 | 0.0 |
 
-| Entity | Release name | Wind MW / CF | Solar MW / CF | Weather / load files | Scenarios | 2023 load validation |
-| --- | --- | --- | --- | --- | --- | --- |
-| `BANC` | Balancing Authority of Northern California | 0.0 / zero | 338.6 / nonzero | yes / yes | 2 | yes |
-| `CPLE` | Duke Energy Progress East | 0.0 / zero | 2,922.5 / nonzero | yes / yes | 2 | yes |
-| `DUK` | Duke Energy Carolinas | 0.0 / zero | 2,157.1 / nonzero | yes / yes | 2 | yes |
-| `FMPP` | Florida Municipal Power Pool | 0.0 / zero | 166.9 / nonzero | yes / yes | 2 | yes |
-| `FPC` | Duke Energy Florida Inc. | 0.0 / zero | 1,936.9 / nonzero | yes / yes | 2 | yes |
-| `FPL` | Florida Power & Light Company | 0.0 / zero | 7,192.3 / nonzero | yes / yes | 2 | yes |
-| `GVL` | Gainesville Regional Utilities | 0.0 / zero | 4.8 / nonzero | yes / yes | 2 | yes |
-| `IID` | Imperial Irrigation District | 0.0 / zero | 543.2 / nonzero | yes / yes | 2 | yes |
-| `JEA` | JEA | 0.0 / zero | 38.1 / nonzero | yes / yes | 2 | yes |
-| `LGEE` | Louisville Gas and Electric Company and Kentucky Utilities Company | 0.0 / zero | 18.1 / nonzero | yes / yes | 2 | yes |
-| `SC` | South Carolina Public Service Authority | 0.0 / zero | 303.3 / nonzero | yes / yes | 2 | yes |
-| `SCEG` | Dominion Energy South Carolina | 0.0 / zero | 1,044.1 / nonzero | yes / yes | 2 | yes |
-| `SEC` | Seminole Electric Cooperative | 0.0 / zero | 74.5 / nonzero | yes / yes | 2 | yes |
-| `SOCO` | Southern Company Services, Inc. - Transmission | 0.0 / zero | 5,485.9 / nonzero | yes / yes | 2 | yes |
-| `TAL` | City of Tallahassee | 0.0 / zero | 62.0 / nonzero | yes / yes | 2 | yes |
-| `TEC` | Tampa Electric Company | 0.0 / zero | 1,356.4 / nonzero | yes / yes | 2 | yes |
+All 68 entities have scenario metrics and stress catalogs. Load validation
+covers 58 of the 60 load entities; AEC and NSB lack usable packaged actuals.
 
-#### Load only (9)
+#### BA pools
 
-| Entity | Release name | Wind MW / CF | Solar MW / CF | Weather / load files | Scenarios | 2023 load validation |
-| --- | --- | --- | --- | --- | --- | --- |
-| `AEC` | PowerSouth Energy Cooperative | 0.0 / absent | 0.0 / absent | yes / yes | 1 | no |
-| `CHPD` | Public Utility District No. 1 of Chelan County | 0.0 / absent | 0.0 / absent | yes / yes | 1 | yes |
-| `DOPD` | Public Utility District No. 1 of Douglas County | 0.0 / absent | 0.0 / absent | yes / yes | 1 | yes |
-| `GCPD` | Public Utility District No. 2 of Grant County, Washington | 0.0 / absent | 0.0 / absent | yes / yes | 1 | yes |
-| `HST` | City of Homestead | 0.0 / absent | 0.0 / absent | yes / yes | 1 | yes |
-| `NSB` | New Smyrna Beach Utilities Commission | 0.0 / absent | 0.0 / absent | yes / yes | 1 | no |
-| `SCL` | Seattle City Light | 0.0 / absent | 0.0 / absent | yes / yes | 1 | yes |
-| `TIDC` | Turlock Irrigation District | 0.0 / absent | 0.0 / absent | yes / yes | 1 | yes |
-| `TPWR` | City of Tacoma Department of Public Utilities Light Division | 0.0 / absent | 0.0 / absent | yes / yes | 1 | yes |
+Load and CF are included within the pooled scenario-metrics files. All five
+historical pools have six scenarios and stress catalogs.
 
-#### Wind and solar only (2)
-
-| Entity | Release name | Wind MW / CF | Solar MW / CF | Weather / load files | Scenarios | 2023 load validation |
-| --- | --- | --- | --- | --- | --- | --- |
-| `AVRN` | Avangrid Renewables LLC | 1,695.9 / nonzero | 322.0 / nonzero | no / no | 6 | no |
-| `NBSO` | New Brunswick System Operator | 42.0 / nonzero | 17.9 / nonzero | yes / no | 6 | no |
-
-#### Solar only (3)
-
-| Entity | Release name | Wind MW / CF | Solar MW / CF | Weather / load files | Scenarios | 2023 load validation |
-| --- | --- | --- | --- | --- | --- | --- |
-| `CPLW` | Duke Energy Progress West | 0.0 / zero | 28.4 / nonzero | no / no | 2 | no |
-| `HECO` | Hawaiian Electric Co Inc | 0.0 / zero | 319.1 / nonzero | yes / no | 2 | no |
-| `SEPA` | Southeastern Power Administration | 0.0 / zero | 275.0 / nonzero | yes / no | 2 | no |
-
-#### Wind only (3)
-
-| Entity | Release name | Wind MW / CF | Solar MW / CF | Weather / load files | Scenarios | 2023 load validation |
-| --- | --- | --- | --- | --- | --- | --- |
-| `GRIS` | Gridforce South | 324.3 / nonzero | 0.0 / zero | no / no | 2 | no |
-| `GWA` | NaturEner Power Watch, LLC | 210.0 / nonzero | 0.0 / zero | no / no | 2 | no |
-| `WWA` | NaturEner Wind Watch, LLC | 189.0 / nonzero | 0.0 / zero | no / no | 2 | no |
+| Name | Code | Load | Wind MW | Solar MW |
+| --- | --- | :---: | ---: | ---: |
+| MISO North/Central aggregate | `MISO_NCA` | x | 31,966.2 | 9,781.2 |
+| MISO South aggregate | `MISO_SA` | x | 184.5 | 3,793.7 |
+| Sum of all six MISO subregions | `MISO_SUBREGION_SUM` | x | 32,150.7 | 13,574.9 |
+| Rest of East pool | `ROE` | x | 51,006.4 | 45,899.4 |
+| Western pool | `WECC` | x | 31,300.5 | 40,775.9 |
 
 <details>
-<summary>Pooled regions: membership and capacity</summary>
+<summary>Pool membership</summary>
 
-All five historical pools contain load, wind CF, and solar CF within six-scenario
-metrics, plus stress catalogs. WECC and Rest of East use the member lists below.
-
-| Pool | Definition | Wind MW | Solar MW | Members |
-| --- | --- | --- | --- | --- |
-| `MISO_SUBREGION_SUM` | Sum of all six MISO subregions | 32,150.7 | 13,574.9 | `MISO_0001`, `MISO_0004`, `MISO_0006`, `MISO_0027`, `MISO_0035`, `MISO_8910` |
-| `MISO_NCA` | MISO North/Central aggregate | 31,966.2 | 9,781.2 | `MISO_0001`, `MISO_0004`, `MISO_0006`, `MISO_0027`, `MISO_0035` |
-| `MISO_SA` | MISO South aggregate | 184.5 | 3,793.7 | `MISO_8910` |
-| `WECC` | Western pool | 31,300.5 | 40,775.9 | `AVA`, `AZPS`, `BANC`, `BPAT`, `CHPD`, `CISO`, `DOPD`, `EPE`, `GCPD`, `IID`, `IPCO`, `LDWP`, `NEVP`, `NWMT`, `PACE`, `PACW`, `PGE`, `PNM`, `PSCO`, `PSEI`, `SCL`, `SRP`, `TEPC`, `TIDC`, `TPWR`, `WACM`, `WALC`, `WAUW`, `AVRN`, `GRIS`, `GWA`, `WWA` |
-| `ROE` | Rest of East pool | 51,006.4 | 45,899.4 | `AEC`, `AECI`, `CPLE`, `DUK`, `FMPP`, `FPC`, `FPL`, `GVL`, `HST`, `ISNE`, `JEA`, `LGEE`, `NSB`, `NYIS`, `PJM`, `SC`, `SCEG`, `SEC`, `SOCO`, `SPA`, `SWPP`, `TAL`, `TEC`, `TVA`, `CPLW`, `NBSO`, `SEPA` |
+| Pool | Member BAs / subregions |
+| --- | --- |
+| `MISO_NCA` (5) | `MISO_0001`, `MISO_0004`, `MISO_0006`, `MISO_0027`, `MISO_0035` |
+| `MISO_SA` (1) | `MISO_8910` |
+| `MISO_SUBREGION_SUM` (6) | `MISO_0001`, `MISO_0004`, `MISO_0006`, `MISO_0027`, `MISO_0035`, `MISO_8910` |
+| `ROE` (27) | `AEC`, `AECI`, `CPLE`, `DUK`, `FMPP`, `FPC`, `FPL`, `GVL`, `HST`, `ISNE`, `JEA`, `LGEE`, `NSB`, `NYIS`, `PJM`, `SC`, `SCEG`, `SEC`, `SOCO`, `SPA`, `SWPP`, `TAL`, `TEC`, `TVA`, `CPLW`, `NBSO`, `SEPA` |
+| `WECC` (32) | `AVA`, `AZPS`, `BANC`, `BPAT`, `CHPD`, `CISO`, `DOPD`, `EPE`, `GCPD`, `IID`, `IPCO`, `LDWP`, `NEVP`, `NWMT`, `PACE`, `PACW`, `PGE`, `PNM`, `PSCO`, `PSEI`, `SCL`, `SRP`, `TEPC`, `TIDC`, `TPWR`, `WACM`, `WALC`, `WAUW`, `AVRN`, `GRIS`, `GWA`, `WWA` |
 
 The MISO pools overlap: MISO_SUBREGION_SUM combines MISO_NCA and MISO_SA.
-Do not add these alternative aggregates together.
+Do not add these alternative aggregates together. WECC and Rest of East
+represent the listed members, not complete geographic censuses.
 
 </details>
 
