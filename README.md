@@ -2,7 +2,7 @@
 
 ## Overview
 
-These 17 Jupyter notebooks explain how weather, electricity demand, and wind
+These 18 Jupyter notebooks explain how weather, electricity demand, and wind
 and solar resources are combined to study net load, resource sharing, and
 stress events. Read the saved tables and figures on GitHub, or run the
 examples locally. The first example uses only bundled data.
@@ -64,7 +64,7 @@ refer to the two [downloadable collections](#data). All examples display
 results inline. Saved files go under
 `data_outputs/<category>/<notebook-stem>/` and are ignored by Git.
 
-### Data flow — 8 notebooks
+### Data flow — 9 notebooks
 
 | Notebook | Inputs and requirements | Outputs |
 | --- | --- | --- |
@@ -73,7 +73,8 @@ results inline. Saved files go under
 | [TELL load forecasting](notebooks/data_flow/tell_load_forecast_data_flow.ipynb) | Historical MISO weather; bundled raw load, validation metadata, and weather-source periods; TELL. | Training/prediction inputs, calibration, model files, 2007–2023 forecasts, held-out 2023 validation, two figures. |
 | [EIA-860 regridding](notebooks/data_flow/eia860_regridding_methodology.ipynb) | Bundled 2024 workbooks and reviewed subregion mapping; HSDS grid metadata. | MISO grid-point CSV and mapping summaries. |
 | [Site CF, weighting, and validation](notebooks/data_flow/site_cf_generation_ba_weighting_validation.ipynb) | Bundled 2022 fleet, SAM settings, renewable actuals, capacity manifest; reV/PySAM; HSDS if site-weather caches are absent. | Site-weather/CF HDF5 files, weighted MISO CF CSVs, validation metrics and figure; Iowa subset example. |
-| [BA scenario metrics](notebooks/data_flow/ba_scenario_metrics_generation.ipynb) | Historical BA load/CF/scenarios and pooled metrics; bundled metadata, losses, raw MISO load, 2022 renewable actuals/capacities. | Reconstructed MISO scenario CSV, June 2022 comparison figure, archive checks, one-hour pooling example. |
+| [BA scenario metrics](notebooks/data_flow/ba_scenario_metrics_generation.ipynb) | Historical MISO load/CF/scenarios; bundled metadata, losses, raw MISO load, 2022 renewable actuals/capacities. | Reconstructed MISO scenario CSV, June 2022 comparison figure, and archive checks. |
+| [Pooled scenario metrics](notebooks/data_flow/pooled_scenario_metrics_generation.ipynb) | Historical scenario files for five MISO North/Central subregions and the released MISO_NCA pool; bundled BA capacity metadata. | Reconstructed MISO_NCA scenario CSV for 2007–2023, hourly previews, and archive checks. |
 | [Stress-event catalogs](notebooks/data_flow/ba_stress_event_catalog.ipynb) | Historical BA/pooled scenarios and bundled manifests. | Toy calculations and four regional event CSVs: SWPP, MISO_8910, MISO_SUBREGION_SUM, WECC. |
 | [State load generation](notebooks/data_flow/state_load_generation.ipynb) | TaiESM1 BA/Iowa load; bundled county mapping/population and selected GCAM case; TELL. | One Iowa year/case reconstruction, staging files, archive comparison, load plots, and nine archived annual trajectories. |
 
@@ -314,6 +315,10 @@ They do not have separate dedicated pooled weather/load/CF files in the
 archive. Load and generation are combined from member products; the renewable
 capacity represented by each pool is shown below. "Rest of East" and "WECC"
 refer to these listed memberships, not complete geographic censuses.
+
+The [pooled scenario notebook](notebooks/data_flow/pooled_scenario_metrics_generation.ipynb)
+works through `MISO_NCA`, combining its five members' installed generation
+and capacities before calculating the pooled portfolios.
 
 | Pool | Definition | Wind MW | Solar MW | Members |
 | --- | --- | --- | --- | --- |

@@ -263,7 +263,7 @@ def write_report(output_dir, report, replacements):
               "The Iowa check requires its existing hourly/count assertions, a complete 240-row, seven-column "
               "summary with unique groups and nonnegative integer counts, and six named PNGs.", "",
               "This is a two-notebook compatibility check. It does not validate all released products, "
-              "all 17 notebooks, or scientific correctness. The known Iowa pressure discrepancy remains "
+              "all notebooks, or scientific correctness. The known Iowa pressure discrepancy remains "
               "a separate scientific review item. Source kind `zenodo` means the operator supplied "
               "downloaded files; this command does not download or authenticate them. Environment versions "
               "are recorded, but environment installation itself is not performed by this command.", ""]
