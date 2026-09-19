@@ -10,11 +10,12 @@
 *.pyc
 
 # Zenodo datasets extracted beside the GitHub inputs
-data/wtk_bchrrr_nsrdb_2007_2023/
-data/taiesm1_historical_ssp245_v022_2000_2099/
+data_inputs/wtk_bchrrr_nsrdb_2007_2023/
+data_inputs/taiesm1_historical_ssp245_v022_2000_2099/
 
 # Notebook-generated files and acquisition caches
-notebook_outputs/
+data_outputs/*
+!data_outputs/.gitkeep
 notebooks/**/outputs/
 *.h5
 *.hdf5
@@ -28,3 +29,8 @@ notebooks/**/outputs/
 *.tmp
 .DS_Store
 __MACOSX__/
+
+# Legacy local folders retained when updating an existing checkout
+/data/wtk_bchrrr_nsrdb_2007_2023/
+/data/taiesm1_historical_ssp245_v022_2000_2099/
+/notebook_outputs/

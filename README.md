@@ -54,7 +54,7 @@ With Git and Conda installed, start in a short parent folder, such as
 
 4. Select **Restart Kernel and Run All**. The notebook checks 8,760 hours,
    displays a load-duration figure, and saves
-   `notebook_outputs/analysis/miso_load_duration_curve/miso_2023_load_duration_curve.png`.
+   `data_outputs/analysis/miso_load_duration_curve/miso_2023_load_duration_curve.png`.
 
 Choose another example from the index below. Run its cells from top to bottom;
 the notebook folder is the working directory for its relative paths. Saved
@@ -67,7 +67,7 @@ The repository includes **94 supporting data files and three manifests**.
 In the tables, **bundled** means included here; **historical** and **TaiESM1**
 refer to the two [downloadable collections](#data). All examples display
 results inline. Saved files go under
-`notebook_outputs/<category>/<notebook-stem>/` and are ignored by Git.
+`data_outputs/<category>/<notebook-stem>/` and are ignored by Git.
 
 ### Data flow — 8 notebooks
 
@@ -113,6 +113,15 @@ figure reads all nine archived trajectories rather than reconstructing them.
 
 ## Data
 
+| Folder | Purpose |
+| --- | --- |
+| `data_inputs/` | Bundled supporting files and extracted Zenodo datasets. Precomputed reference products are inputs to these examples. |
+| `data_outputs/` | Figures, tables, models, and caches created by running notebooks; contents are ignored by Git. |
+
+When updating an older checkout, move downloaded dataset folders from `data/`
+to `data_inputs/` and existing results from `notebook_outputs/` to `data_outputs/`.
+Git updates the bundled inputs automatically.
+
 Dataset version **0.1.0**: [Zenodo DOI 10.5281/zenodo.21844870](https://doi.org/10.5281/zenodo.21844870).
 See the [publication status](#verification-and-publication-status) below.
 
@@ -132,15 +141,15 @@ Keep these five files together in a download folder:
 - `RELEASE_MANIFEST.csv`
 
 The archives total about 9.3 GB. Extract the collection required by your
-notebook into `data/`, using these commands from the repository root:
+notebook into `data_inputs/`, using these commands from the repository root:
 
 ```powershell
-python -m zipfile -e "C:/path/to/wxdata_wtk_bchrrr_nsrdb_2007_2023.zip" "data"
-python -m zipfile -e "C:/path/to/wxdata_sup3rcc_taiesm1_curated_2000_2099.zip" "data"
+python -m zipfile -e "C:/path/to/wxdata_wtk_bchrrr_nsrdb_2007_2023.zip" "data_inputs"
+python -m zipfile -e "C:/path/to/wxdata_sup3rcc_taiesm1_curated_2000_2099.zip" "data_inputs"
 ```
 
-The resulting folders are `data/wtk_bchrrr_nsrdb_2007_2023/` and
-`data/taiesm1_historical_ssp245_v022_2000_2099/`, alongside the bundled inputs.
+The resulting folders are `data_inputs/wtk_bchrrr_nsrdb_2007_2023/` and
+`data_inputs/taiesm1_historical_ssp245_v022_2000_2099/`, alongside the bundled inputs.
 The archive checker below can run without full extraction. Keep downloaded
 datasets, acquisition caches, generated outputs, and credentials out of Git.
 
@@ -164,7 +173,7 @@ using the active Python interpreter:
   stress-hour totals, a complete 240-row CSV, and six figures.
 
 Reports, executed copies, and figures go to a new folder under
-`notebook_outputs/release_check/`. Optional `--output-dir` must name a
+`data_outputs/release_check/`. Optional `--output-dir` must name a
 nonexistent directory. Failures return a nonzero exit code. Reports retain
 the commit, dirty-checkout status, source/manifest hashes, package versions,
 and results. This verifies compatibility for two notebooks; it does not
@@ -355,7 +364,7 @@ and wind CF for 40. Iowa has all six component/product families in both releases
 The coverage snapshot was checked on **2026-09-09**. Its sources are the
 [BA manifest](manifests/ba_scenario_metric_metadata_manifest_wtk_bchrrr_nsrdb_2007_2023.csv),
 [pool manifest](manifests/pooled_region_scenario_metric_metadata_manifest_wtk_bchrrr_nsrdb_2007_2023.csv),
-[validation membership](data/validation/load_forecast/ba_2023_validation_metadata.csv),
+[validation membership](data_inputs/validation/load_forecast/ba_2023_validation_metadata.csv),
 and the archived files. For a new dataset version, recheck memberships,
 capacities, scenario columns, zero profiles, and calendars.
 

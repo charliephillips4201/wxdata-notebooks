@@ -97,7 +97,7 @@ def prepare_inputs(archive_dir, stage, report):
     for archive_name, member in NOTEBOOKS.values():
         row = one_row(rows, "data_file", member)
         require(row["archive_name"] == archive_name, f"Wrong archive for {member}")
-        target = stage / "data" / member
+        target = stage / "data_inputs" / member
         target.parent.mkdir(parents=True, exist_ok=True)
         with zipfile.ZipFile(archive_dir / archive_name) as archive:
             require(archive.namelist().count(member) == 1, f"Expected one ZIP member: {member}")
@@ -198,14 +198,14 @@ def execute_notebook(name, stage, output_dir, report, replacements):
             entry["outputs"] = {"embedded_figures": 1, "figure": figure.name,
                                 "existing_notebook_assertions": "pass"}
         else:
-            folder = stage / "notebook_outputs" / "analysis" / name
+            folder = stage / "data_outputs" / "analysis" / name
             summary = validate_summary(folder / "iowa_seasonal_risk_hours.csv")
             expected = {f"iowa_{scenario}_seasonal_risk_hours.png" for scenario in SCENARIOS}
             require({path.name for path in folder.glob("*.png")} == expected, "Expected six named Iowa figures")
             for filename in sorted(expected):
                 validate_png(folder / filename)
             entry["outputs"] = {**summary, "figures": sorted(expected),
-                                "directory": f"notebook_outputs/analysis/{name}",
+                                "directory": f"data_outputs/analysis/{name}",
                                 "existing_notebook_assertions": "pass"}
         entry["status"] = "pass"
     finally:
@@ -214,9 +214,9 @@ def execute_notebook(name, stage, output_dir, report, replacements):
             destination = output_dir / relative_output
             destination.parent.mkdir(parents=True, exist_ok=True)
             nbformat.write(nbformat.from_dict(portable(notebook, replacements)), destination)
-            generated = stage / "notebook_outputs" / "analysis" / name
+            generated = stage / "data_outputs" / "analysis" / name
             if generated.exists():
-                shutil.copytree(generated, output_dir / "notebook_outputs" / "analysis" / name)
+                shutil.copytree(generated, output_dir / "data_outputs" / "analysis" / name)
         finally:
             if client.kc is not None:
                 client.kc.stop_channels()
@@ -271,7 +271,7 @@ def write_report(output_dir, report, replacements):
         lines += ["Failure:", "", "```text", report["error"], "```", ""]
     if report["status"] == "pass":
         lines += ["[MISO figure](miso_monthly_event_counts.png) · "
-                  "[Iowa summary](notebook_outputs/analysis/state_seasonal_risk_hours/iowa_seasonal_risk_hours.csv)", ""]
+                  "[Iowa summary](data_outputs/analysis/state_seasonal_risk_hours/iowa_seasonal_risk_hours.csv)", ""]
     lines += ["[Detailed provenance, checks, outputs, and package versions](report.json)", ""]
     (output_dir / "REPORT.md").write_text("\n".join(lines), encoding="utf-8")
 
@@ -284,7 +284,7 @@ def main(argv=None):
     args = parser.parse_args(argv)
     archive_dir = args.archive_dir.resolve()
     run_id = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ") + "_" + uuid.uuid4().hex[:8]
-    output_dir = (args.output_dir or ROOT / "notebook_outputs" / "release_check" / run_id).resolve()
+    output_dir = (args.output_dir or ROOT / "data_outputs" / "release_check" / run_id).resolve()
     # Refuse reuse so stale output files can never satisfy this run's checks.
     output_dir.mkdir(parents=True, exist_ok=False)
     report = {"status": "fail", "started_utc": datetime.now(timezone.utc).isoformat(),
