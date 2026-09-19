@@ -44,12 +44,12 @@ With Git and Conda installed, start in a short parent folder, such as
 3. Open the first example:
 
    ```powershell
-   jupyter lab notebooks/analysis/miso_load_duration_curve.ipynb
+   jupyter lab notebooks/validation/miso_load_duration_curve.ipynb
    ```
 
 4. Select **Restart Kernel and Run All**. The notebook checks 8,760 hours,
    displays a load-duration figure, and saves
-   `data_outputs/analysis/miso_load_duration_curve/miso_2023_load_duration_curve.png`.
+   `data_outputs/validation/miso_load_duration_curve/miso_2023_load_duration_curve.png`.
 
 Choose another example from the index below. Run its cells from top to bottom;
 the notebook folder is the working directory for its relative paths. Saved
@@ -77,20 +77,20 @@ results inline. Saved files go under
 | [Stress-event catalogs](notebooks/data_flow/ba_stress_event_catalog.ipynb) | Historical BA/pooled scenarios and bundled manifests. | Toy calculations and four regional event CSVs: SWPP, MISO_8910, MISO_SUBREGION_SUM, WECC. |
 | [State load generation](notebooks/data_flow/state_load_generation.ipynb) | TaiESM1 BA/Iowa load; bundled county mapping/population and selected GCAM case; TELL. | One Iowa year/case reconstruction, staging files, archive comparison, load plots, and nine archived annual trajectories. |
 
-### Validation — 4 notebooks
+### Validation — 5 notebooks
 
 | Notebook | Inputs and requirements | Outputs |
 | --- | --- | --- |
+| [MISO load-duration curve](notebooks/validation/miso_load_duration_curve.ipynb) | Bundled raw-value columns in six cleaned observation files and six saved subregion forecasts. | Load-duration PNG; no download or training needed. |
 | [All-BA 2023 load validation](notebooks/validation/all_ba_2023_load_forecast_validation.ipynb) | Historical BA load; 58 bundled cleaned-observation CSVs and validation metadata. | Coverage, complete metric table, three scatter plots; inline only. |
 | [MISO subregion load validation](notebooks/validation/miso_subregion_load_forecast_validation.ipynb) | Historical direct-MISO and six subregion forecasts; bundled cleaned MISO actuals. | Coverage, metrics, scatter plot; inline only. |
 | [MISO wind, solar, and load validation](notebooks/validation/miso_wind_solar_load_validation.ipynb) | Historical MISO load; bundled 2022 fleet CF/capacities, raw load, renewable actuals. | Full-year loss-sensitivity metric CSV and January comparison PNG. |
 | [Iowa historical/TaiESM1 comparison](notebooks/validation/state_historical_taiesm_validation.ipynb) | Iowa weather, load, wind CF, and solar CF from both collections. | Coverage, component diagnostics, duration curves; inline only. |
 
-### Analysis — 5 notebooks
+### Analysis — 4 notebooks
 
 | Notebook | Inputs and requirements | Outputs |
 | --- | --- | --- |
-| [MISO load-duration curve](notebooks/analysis/miso_load_duration_curve.ipynb) | Bundled raw-value columns in six cleaned observation files and six saved subregion forecasts. | Load-duration PNG; no download or training needed. |
 | [Pairwise pooling heatmaps](notebooks/analysis/pairwise_pooling_heatmap.ipynb) | Historical BA and pooled scenarios. | Ordered-pair metric CSV and nine heatmaps: four main and five portfolio appendices. |
 | [Monthly MISO event counts](notebooks/analysis/miso_monthly_event_counts.ipynb) | Historical direct-MISO stress-event catalog. | One three-panel figure; inline only. |
 | [Satellite and reanalysis context](notebooks/analysis/plot_satellite_and_reanalysis.ipynb) | NASA Worldview and NOAA PSL network access. | Five embedded images; no saved files. |
