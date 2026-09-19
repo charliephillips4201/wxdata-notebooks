@@ -1,58 +1,36 @@
 # Synchronized Wind, Solar, and Load Data for Power System Planning
 
-This repository is the public methods companion for synchronized weather,
-electricity-load, wind-capacity-factor, solar-capacity-factor, net-load, and
-stress-event datasets. It contains 17 executed Jupyter notebooks,
-documentation, and the compact inputs used directly by those notebooks. The
-private operational pipeline, run configurations, and large generated datasets
-are intentionally not included.
+This repository shows how weather, electricity demand, and wind and solar
+resources are combined for power-system planning. Its 17 Jupyter notebooks
+explain construction methods, compare modeled and observed data, and explore
+net load, pooling, and stress events. Saved tables and figures support review
+on GitHub without installing software or downloading data.
 
-The large analysis-ready datasets are distributed separately through Zenodo
-DOI [10.5281/zenodo.21844870](https://doi.org/10.5281/zenodo.21844870).
+A **balancing authority (BA)** manages electricity supply and demand in a
+region. A **capacity factor (CF)** expresses output as a fraction of nameplate
+capacity. Here, **net load** is demand minus wind and solar generation.
+**MISO**, the Midcontinent Independent System Operator, is a recurring example.
 
 ## Start here
 
-Read [`documentation/START_HERE.md`](documentation/START_HERE.md) for the
-recommended notebook order and setup instructions. Exact requirements for each
-notebook are listed in
-[`documentation/NOTEBOOK_INPUTS.md`](documentation/NOTEBOOK_INPUTS.md).
+- **Review a first result:** open the [MISO load-duration notebook](notebooks/analysis/miso_load_duration_curve.ipynb).
+  It compares the distribution and timing of actual and modeled 2023 load.
+- **Run that example:** follow the installation steps below. All its inputs
+  are included in this repository; it needs no Zenodo download or weather service.
+- **Explore the methods:** use the [notebook index and input/output guide](documentation/NOTEBOOK_INPUTS.md#notebook-inputs).
+  It lists all 17 notebooks in their methods order, with their requirements and outputs.
+- **Check regional coverage:** the [BA coverage reference](documentation/BA_COVERAGE.md)
+  lists entity names, fleets, available products, scenarios, pools, and exclusions.
 
-## Weather datasets
+The notebook release candidate is `v0.1.0`, paired with dataset version `0.1.0`.
+These versions are independent. Dataset DOI
+[10.5281/zenodo.21844870](https://doi.org/10.5281/zenodo.21844870) is reserved for
+the Zenodo draft and becomes resolvable when that record is published. See
+[publication status and remaining checks](documentation/NOTEBOOK_INPUTS.md#publication-status).
 
-| Dataset | Period | Purpose |
-| --- | --- | --- |
-| WTK / BC-HRRR / NSRDB | 2007–2023 | Historical weather dataset combining wind-resource, solar-resource, and load-weather variables. WTK is 2007-2014 and contains wind-resource variables, BC-HRRR is 2015-2023 and contains wind resource variables, NSRDB is 2007-2023 and contains solar resource variables. Load-weather variables are primarily derived from WTK/BC-HRRR, though `ghi` is used for load forecasts and is derived from NSRDB
-| Sup3rCC (TaiESM1) | 2000–2099 | Historical and simulated future climate dataset used for selected balancing-authority, pooled-region, and Iowa analyses. |
+## Install and run the first example
 
-The notebooks also use TELL for weather-informed load modeling; reV and
-PySAM/SAM for wind and solar capacity factors; EIA-860 generator records;
-EIA-930-derived load and renewable observations; GCAM-USA state electricity
-demand scenarios; and percentile/event-grouping methods for power-system stress
-analysis.
-
-## Repository layout
-
-```text
-wxdata-notebooks/
-├── notebooks/
-│   ├── data_flow/      # 8 construction and stress-event notebooks
-│   ├── validation/     # 4 load, renewable, and climate validation notebooks
-│   └── analysis/       # 5 paper-facing analysis and figure notebooks
-├── data/               # compact GitHub inputs plus ignored Zenodo data roots
-├── manifests/          # 3 analysis metadata manifests
-├── documentation/      # setup, input guide, sources, and process diagrams
-├── environment.yml
-├── CITATION.cff
-└── LICENSE
-```
-
-All notebooks retain their saved outputs so tables and figures render directly
-on GitHub. Standalone generated files are written under the ignored
-`notebook_outputs/` directory and are not part of the Zenodo deposit.
-
-## Install and open the notebooks
-
-From the repository root:
+With Conda installed, run these commands from the repository root:
 
 ```powershell
 conda env create -f environment.yml
@@ -60,30 +38,57 @@ conda activate wxdata-notebooks
 jupyter lab notebooks
 ```
 
-Download and extract the two Zenodo archives into `data/` before rerunning
-notebooks that consume the full analysis-ready datasets. See
-[`data/README.md`](data/README.md).
+On Windows, use a short checkout path such as `C:/work/wxdata-notebooks` to
+avoid path-length failures. Open `analysis/miso_load_duration_curve.ipynb`
+and select **Restart Kernel and Run All**. It displays one figure and saves
+its PNG under `notebook_outputs/analysis/miso_load_duration_curve/`.
 
-Some acquisition and reconstruction steps require network access, NREL HSDS,
-TELL, or reV/PySAM. Saved notebook outputs allow the complete documented method
-to be reviewed without rerunning those external acquisition steps.
+Other notebooks may require the [large datasets](documentation/NOTEBOOK_INPUTS.md#download-the-datasets),
+a configured HSDS weather service, or TELL/reV/PySAM reconstruction. Check each
+notebook's requirements before running it. The [two-notebook release check](documentation/NOTEBOOK_INPUTS.md#verify-the-release)
+uses one input from each archive and needs no weather-service credentials.
+[Execution notes](documentation/NOTEBOOK_INPUTS.md#execution-notes) distinguish
+verified local stages from retained acquisition or model results.
 
-## Repository boundary
+## How the pieces fit
 
-This repository does not contain the private operational CLI, Python package,
-production scripts, run configurations, tests, or working data trees. The
-Zenodo record remains data-only and does not contain notebooks or notebook
-outputs.
+![Method relationships from source weather and load through construction, scenario metrics, validation, stress catalogs, and analysis.](documentation/process_flow.svg)
 
-Source descriptions and upstream acknowledgments are collected in
-[`documentation/SOURCES.md`](documentation/SOURCES.md) and
-[`data/README.md`](data/README.md).
+The data-flow notebooks teach bounded examples along the load and renewable
+branches. The diagram shows method relationships; running one example does not
+supply the complete inputs for the next. Each notebook reads its stated inputs
+directly. Equations, assumptions, and interpretations stay beside the code.
 
-## Citation
+| Weather collection | Period | Use |
+| --- | --- | --- |
+| WTK / BC-HRRR / NSRDB | 2007-2023 | Historical wind and load weather from WTK (2007-2014) and BC-HRRR (2015-2023), with NSRDB solar resource and load-weather GHI throughout. |
+| sup3rCC / TaiESM1 | 2000-2099 | Historical and simulated future climate inputs for selected BA, pooled-region, and Iowa analyses. |
 
-Authorship and repository citation metadata are provided in
-[`CITATION.cff`](CITATION.cff). Cite the Zenodo dataset separately using the
-citation displayed on its DOI record.
+## Repository contents
+
+- `notebooks/`: eight data-flow, four validation, and five analysis notebooks.
+- `data/`: 94 bundled data files; larger Zenodo datasets are extracted here and ignored by Git.
+- `manifests/`: three metadata manifests.
+- `documentation/`: the input/output guide, BA coverage reference, and process diagram.
+- `scripts/check_release.py`: the existing archive and two-notebook execution check.
+- `environment.yml`: the environment specification for this candidate.
+
+Standalone notebook outputs and working caches go under ignored
+`notebook_outputs/`. The Zenodo deposit contains data, not notebooks or notebook
+outputs. The private operational package, production scripts, production test
+suite, and run configurations are outside this repository.
+
+## Citation and license
+
+Repository authorship and citation metadata are in [CITATION.cff](CITATION.cff).
+Cite the dataset separately using its Zenodo record when published.
+
+Unless otherwise noted, the original notebooks and documentation contributed
+by Charlie Phillips are licensed under the
+[Creative Commons Attribution 4.0 International License](https://creativecommons.org/licenses/by/4.0/).
+See [LICENSE](LICENSE). Third-party data and software retain their original
+licenses and attribution requirements. The [source inventory and upstream notices](documentation/NOTEBOOK_INPUTS.md#sources-and-attribution)
+preserve those acknowledgments; inclusion here does not relicense those materials.
 
 ## AI assistance
 
@@ -91,13 +96,3 @@ Generative AI tools were used to assist with drafting and editing portions of
 the documentation and notebook code. All resulting material was reviewed,
 tested, and accepted by Charlie Phillips, who takes responsibility for the
 content of this repository.
-
-## License
-
-Unless otherwise noted, the original notebooks and documentation contributed
-by Charlie Phillips are licensed under the
-[Creative Commons Attribution 4.0 International License](https://creativecommons.org/licenses/by/4.0/).
-See [`LICENSE`](LICENSE).
-
-Third-party data and software retain their original licenses and attribution
-requirements. Inclusion in this repository does not relicense those materials.
