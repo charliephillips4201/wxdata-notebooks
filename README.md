@@ -8,6 +8,8 @@ planning. They show how these inputs produce renewable scenarios, net-load
 time series, and stress-event catalogs. Saved tables and figures can be read
 directly on GitHub.
 
+[Dataset preview on Zenodo (unpublished)][zenodo-preview].
+
 ![Weather and fleet inputs feed load and renewable models, scenario metrics, validation, and analysis.](process_flow.svg)
 
 <a id="quick-start"></a>
@@ -62,7 +64,7 @@ records their sources, selections, and checksums.
 <a id="download-and-extract"></a>
 <a id="verify-the-download"></a>
 
-The full [Zenodo dataset](https://doi.org/10.5281/zenodo.21844870) contains two
+The [Zenodo dataset preview (unpublished)][zenodo-preview] contains two
 CSV/Parquet collections, with a README, data license, and checksum manifest.
 
 | Collection | Weather sources | Coverage |
@@ -246,8 +248,8 @@ and [load-validation membership](data_inputs/validation/load_forecast/ba_2023_va
 
 ## Sources and citation
 
-Cite the [Zenodo dataset](https://doi.org/10.5281/zenodo.21844870) and use
-[CITATION.cff](CITATION.cff) for the notebooks. Original notebooks and documentation
+Reserved dataset DOI: `10.5281/zenodo.21844870` (active after publication).
+Use [CITATION.cff](CITATION.cff) for the notebooks. Original notebooks and documentation
 use [CC BY 4.0](LICENSE); bundled archive inputs retain their [data license](data_inputs/examples/LICENSE_DATA.txt).
 Third-party materials retain their own terms.
 
@@ -270,3 +272,5 @@ release availability and retain the notebook revision with your results.
 
 OpenAI Codex assisted with code and documentation. Charlie Phillips reviewed
 the work and remains responsible for its content and interpretation.
+
+[zenodo-preview]: https://zenodo.org/records/21844870?preview=1&token=eyJhbGciOiJIUzUxMiJ9.eyJpZCI6ImU1YTZmOTdhLTg1Y2YtNGExMC1hMzdmLTY1NThjMGRjYzg0NyIsImRhdGEiOnt9LCJyYW5kb20iOiI4NThhZTRkYjg5OWNkNjg3MjM1NTBhYjAwYzg2NWU5YiJ9.kYx9A2TU38HVcXgbed38NuUok4_YGhmQ3K7MivkrsoIbPh9I--8NjqIJIjdHz5mhtkUs9elFEc7OdQBQn4bULQ
