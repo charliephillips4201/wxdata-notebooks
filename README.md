@@ -2,15 +2,21 @@
 
 ## Overview
 
-These 18 notebooks explain and evaluate synchronized hourly weather, modeled
-electricity demand, and wind and solar capacity factors (CF) for power-system
-planning. They show how these inputs produce renewable scenarios, net-load
-time series, and stress-event catalogs. Saved tables and figures can be read
-directly on GitHub.
+Power-system planning needs to represent hours when high electricity demand coincides with low wind or solar output. Synchronized weather, demand, and renewable capacity factors preserve these relationships across time and locations. Hourly resolution captures shortfalls and their duration; long records show seasonal and year-to-year variability. Historical and simulated climate collections support complementary investigations of these conditions.
+
+The workflow has two branches: weather becomes modeled electricity demand, while weather and generator fleets become renewable capacity factors. These ingredients feed scenario metrics, geographic pooling, and stress-event catalogs. State products extend the demand calculations to states. Validation assesses model performance and limitations; analysis demonstrates applications of the resulting datasets.
 
 [Dataset preview on Zenodo (unpublished)][zenodo-preview].
 
-![Weather and fleet inputs feed load and renewable models, scenario metrics, validation, and analysis.](process_flow.svg)
+**Load and renewable capacity factors**
+
+[![Weather and fleet inputs become modeled load and renewable capacity factors, with notebook filenames labeling the corresponding stages.](process_flow_load_and_cf.png)](process_flow_load_and_cf.png)
+
+**Scenarios, pooling, and stress events**
+
+[![Synchronized load and renewable capacity factors feed BA scenarios, geographic pooling, and stress-event catalogs, with notebook filenames labeling the corresponding stages.](process_flow_scenarios_and_events.png)](process_flow_scenarios_and_events.png)
+
+Filenames identify the notebooks linked in the index; click a diagram to enlarge it. Arrows show methodological relationships: each notebook uses its own inputs, so running earlier notebooks is not required.
 
 <a id="quick-start"></a>
 <a id="install-and-run-the-first-example"></a>
@@ -22,36 +28,36 @@ inline; exported files go to `data_outputs/`.
 
 ### Data flow — 9 notebooks
 
-| Notebook | Inputs / requirements | Outputs |
-| --- | --- | --- |
-| [County weather-point selection](notebooks/data_flow/county_weather_point_selection.ipynb) | Arthur County Census inputs; HSDS. | Population-weighted point and weather-grid IDs. |
-| [County weather and BA aggregation](notebooks/data_flow/county_hsds_download_and_ba_weather_aggregation.ipynb) | County mappings/population; HSDS if uncached. | One-hour MISO weather and Iowa aggregation example. |
-| [TELL load forecasting](notebooks/data_flow/tell_load_forecast_data_flow.ipynb) | MISO weather/load; TELL. | Model training, forecasts, and held-out 2023 validation. |
-| [EIA-860 regridding](notebooks/data_flow/eia860_regridding_methodology.ipynb) | 2024 fleet/mapping; HSDS. | MISO renewable-site grid assignments. |
-| [Site CF, weighting, and validation](notebooks/data_flow/site_cf_generation_ba_weighting_validation.ipynb) | 2022 fleet/actuals; reV/PySAM; HSDS if uncached. | Site and weighted MISO CF; validation. |
-| [BA scenario metrics](notebooks/data_flow/ba_scenario_metrics_generation.ipynb) | MISO load/CF and capacity metadata. | Six scenarios and full archive comparison. |
-| [Pooled scenario metrics](notebooks/data_flow/pooled_scenario_metrics_generation.ipynb) | Five MISO subregions and capacity metadata. | MISO_NCA scenarios and full archive comparison. |
-| [Stress-event catalogs](notebooks/data_flow/ba_stress_event_catalog.ipynb) | BA/pool scenarios. | Toy example and four regional event catalogs. |
-| [State load generation](notebooks/data_flow/state_load_generation.ipynb) | TaiESM1 BA/Iowa load and GCAM inputs; TELL. | Iowa year/case reconstruction and archived trajectories. |
+| Notebook | Role in workflow | Inputs / requirements | Outputs |
+| --- | --- | --- | --- |
+| [County weather-point selection](notebooks/data_flow/county_weather_point_selection.ipynb) | Choose representative weather locations for demand modeling. | Arthur County Census inputs; HSDS. | Population-weighted point and weather-grid IDs. |
+| [County weather and BA aggregation](notebooks/data_flow/county_hsds_download_and_ba_weather_aggregation.ipynb) | Aggregate county weather into BA inputs for demand modeling. | County mappings/population; HSDS if uncached. | One-hour MISO weather and Iowa aggregation example. |
+| [TELL load forecasting](notebooks/data_flow/tell_load_forecast_data_flow.ipynb) | Convert weather into hourly BA electricity-demand estimates. | MISO weather/load; TELL. | Model training, forecasts, and held-out 2023 validation. |
+| [EIA-860 regridding](notebooks/data_flow/eia860_regridding_methodology.ipynb) | Map renewable capacity onto wind and solar weather grids. | 2024 fleet/mapping; HSDS. | MISO renewable-site grid assignments. |
+| [Site CF, weighting, and validation](notebooks/data_flow/site_cf_generation_ba_weighting_validation.ipynb) | Model site production and calculate capacity-weighted regional CF. | 2022 fleet/actuals; reV/PySAM; HSDS if uncached. | Site and weighted MISO CF; validation. |
+| [BA scenario metrics](notebooks/data_flow/ba_scenario_metrics_generation.ipynb) | Combine synchronized load and CF into generation and net-load scenarios. | MISO load/CF and capacity metadata. | Six scenarios and full archive comparison. |
+| [Pooled scenario metrics](notebooks/data_flow/pooled_scenario_metrics_generation.ipynb) | Combine member load, generation, and capacity into MISO_NCA scenarios. | Five MISO subregions and capacity metadata. | MISO_NCA scenarios and full archive comparison. |
+| [Stress-event catalogs](notebooks/data_flow/ba_stress_event_catalog.ipynb) | Identify extended high-load, high-net-load, and low-renewable events. | BA/pool scenarios. | Toy example and four regional event catalogs. |
+| [State load generation](notebooks/data_flow/state_load_generation.ipynb) | Allocate BA demand to Iowa and apply annual demand pathways. | TaiESM1 BA/Iowa load and GCAM inputs; TELL. | Iowa year/case reconstruction and archived trajectories. |
 
 ### Validation — 5 notebooks
 
-| Notebook | Inputs / requirements | Outputs |
-| --- | --- | --- |
-| [MISO load-duration curve](notebooks/validation/miso_load_duration_curve.ipynb) | Subregion observations and forecasts. | 2023 load-duration comparison. |
-| [All-BA 2023 load validation](notebooks/validation/all_ba_2023_load_forecast_validation.ipynb) | Forecasts/observations for 58 entities. | Coverage, error metrics, and scatter plots. |
-| [MISO subregion load validation](notebooks/validation/miso_subregion_load_forecast_validation.ipynb) | Direct MISO and six subregion forecasts; actuals. | Direct-versus-summed load comparison. |
-| [MISO wind, solar, and load validation](notebooks/validation/miso_wind_solar_load_validation.ipynb) | MISO load, 2022 renewable fleet, and actuals. | Full-year loss sensitivity and January comparison. |
-| [Iowa historical/TaiESM1 comparison](notebooks/validation/state_historical_taiesm_validation.ipynb) | Iowa weather, load, and CF from both collections. | Distributions, diagnostics, and pressure limitation. |
+| Notebook | Role in workflow | Inputs / requirements | Outputs |
+| --- | --- | --- | --- |
+| [MISO load-duration curve](notebooks/validation/miso_load_duration_curve.ipynb) | Assess how well modeled demand reproduces the observed distribution. | Subregion observations and forecasts. | 2023 load-duration comparison. |
+| [All-BA 2023 load validation](notebooks/validation/all_ba_2023_load_forecast_validation.ipynb) | Assess demand-model performance across the available BA validation set. | Forecasts/observations for 58 entities. | Coverage, error metrics, and scatter plots. |
+| [MISO subregion load validation](notebooks/validation/miso_subregion_load_forecast_validation.ipynb) | Compare direct and subregion-based estimates of MISO demand. | Direct MISO and six subregion forecasts; actuals. | Direct-versus-summed load comparison. |
+| [MISO wind, solar, and load validation](notebooks/validation/miso_wind_solar_load_validation.ipynb) | Assess modeled components against observations and examine renewable losses. | MISO load, 2022 renewable fleet, and actuals. | Full-year loss sensitivity and January comparison. |
+| [Iowa historical/TaiESM1 comparison](notebooks/validation/state_historical_taiesm_validation.ipynb) | Diagnose differences between historical-weather and climate-model products. | Iowa weather, load, and CF from both collections. | Distributions, diagnostics, and pressure limitation. |
 
 ### Analysis — 4 notebooks
 
-| Notebook | Inputs / requirements | Outputs |
-| --- | --- | --- |
-| [Pairwise pooling heatmaps](notebooks/analysis/pairwise_pooling_heatmap.ipynb) | Scenarios for 10 BAs and MISO_SUBREGION_SUM. | 110 ordered-pair comparisons and heatmaps. |
-| [Monthly MISO event counts](notebooks/analysis/miso_monthly_event_counts.ipynb) | Historical MISO event catalog. | Event frequency by month and duration. |
-| [Satellite and reanalysis context](notebooks/analysis/plot_satellite_and_reanalysis.ipynb) | NASA Worldview and NOAA PSL access. | Weather context images. |
-| [Iowa seasonal risk hours](notebooks/analysis/state_seasonal_risk_hours.ipynb) | TaiESM1 Iowa scenarios, 2000–2099. | Seasonal risk hours across six portfolios. |
+| Notebook | Role in workflow | Inputs / requirements | Outputs |
+| --- | --- | --- | --- |
+| [Pairwise pooling heatmaps](notebooks/analysis/pairwise_pooling_heatmap.ipynb) | Quantify how geographic pooling changes threshold-relative shortfalls. | Scenarios for 10 BAs and MISO_SUBREGION_SUM. | 110 ordered-pair comparisons and heatmaps. |
+| [Monthly MISO event counts](notebooks/analysis/miso_monthly_event_counts.ipynb) | Examine the seasonality and duration of stress events. | Historical MISO event catalog. | Event frequency by month and duration. |
+| [Satellite and reanalysis context](notebooks/analysis/plot_satellite_and_reanalysis.ipynb) | Relate a selected stress event to surrounding weather conditions. | NASA Worldview and NOAA PSL access. | Weather context images. |
+| [Iowa seasonal risk hours](notebooks/analysis/state_seasonal_risk_hours.ipynb) | Compare seasonal stress across climate periods and renewable portfolios. | TaiESM1 Iowa scenarios, 2000–2099. | Seasonal risk hours across six portfolios. |
 
 ## Data
 
