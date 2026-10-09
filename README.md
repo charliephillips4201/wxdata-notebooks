@@ -16,7 +16,7 @@ The workflow has two branches: weather becomes modeled electricity demand, while
 
 [![Synchronized load and renewable capacity factors feed BA scenarios, geographic pooling, and stress-event catalogs, with notebook filenames labeling the corresponding stages.](process_flow_scenarios_and_events.png)](process_flow_scenarios_and_events.png)
 
-Filenames identify the notebooks linked in the index; click a diagram to enlarge it. Arrows show methodological relationships: each notebook uses its own inputs, so running earlier notebooks is not required.
+Filenames identify the notebooks linked in the index; click a diagram to enlarge it.
 
 <a id="quick-start"></a>
 <a id="install-and-run-the-first-example"></a>
@@ -100,8 +100,8 @@ nameplate capacity has a nonzero CF profile.
 
 Wind and solar values are 2024 nameplate capacities; peak load and its timestamp refer to 2019–2022.
 
-BA peaks use observed hourly demand after the project's existing quality
-screening, without interpolation. Pool peaks use synchronized sums of
+BA peaks use EIA-930 hourly demand after quality screening and review,
+without interpolation. Pool peaks use synchronized sums of
 load-bearing members, retaining only hours when every required member is
 valid. In the peak-load columns, **—** means no usable peak or timestamp.
 Peak load time is the UTC hour of that maximum; exact ties use the earliest
@@ -169,7 +169,7 @@ in the supporting summary.
 | PacifiCorp - East | `PACE` | 9,494.0 | 2022-07-19 00:00 | 3,984.8 | 2,196.4 |
 | PacifiCorp - West | `PACW` | 4,187.0 | 2021-08-12 21:00 | 489.9 | 477.1 |
 | Portland General Electric Company | `PGE` | 4,471.0 | 2021-06-29 00:00 | 716.5 | 189.7 |
-| PJM Interconnection, LLC | `PJM` | 176,085.0 | 2020-07-29 21:00 | 11,451.6 | 14,791.3 |
+| PJM Interconnection, LLC | `PJM` | 152,315.0 | 2019-07-19 22:00 | 11,451.6 | 14,791.3 |
 | Public Service Company of New Mexico | `PNM` | 2,787.0 | 2022-07-20 00:00 | 2,569.0 | 1,784.0 |
 | Public Service Company of Colorado | `PSCO` | 9,853.0 | 2021-07-29 00:00 | 4,692.3 | 2,116.3 |
 | Puget Sound Energy | `PSEI` | 5,431.0 | 2019-02-06 17:00 | 868.4 | 15.5 |
