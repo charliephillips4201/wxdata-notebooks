@@ -28,36 +28,36 @@ inline; exported files go to `data_outputs/`.
 
 ### Data flow — 9 notebooks
 
-| Notebook | Role in workflow | Inputs / requirements | Outputs |
-| --- | --- | --- | --- |
-| [County weather-point selection](notebooks/data_flow/county_weather_point_selection.ipynb) | Choose representative weather locations for demand modeling. | Arthur County Census inputs; HSDS. | Population-weighted point and weather-grid IDs. |
-| [County weather and BA aggregation](notebooks/data_flow/county_hsds_download_and_ba_weather_aggregation.ipynb) | Aggregate county weather into BA inputs for demand modeling. | County mappings/population; HSDS if uncached. | One-hour MISO weather and Iowa aggregation example. |
-| [TELL load forecasting](notebooks/data_flow/tell_load_forecast_data_flow.ipynb) | Convert weather into hourly BA electricity-demand estimates. | MISO weather/load; TELL. | Model training, forecasts, and held-out 2023 validation. |
-| [EIA-860 regridding](notebooks/data_flow/eia860_regridding_methodology.ipynb) | Map renewable capacity onto wind and solar weather grids. | 2024 fleet/mapping; HSDS. | MISO renewable-site grid assignments. |
-| [Site CF, weighting, and validation](notebooks/data_flow/site_cf_generation_ba_weighting_validation.ipynb) | Model site production and calculate capacity-weighted regional CF. | 2022 fleet/actuals; reV/PySAM; HSDS if uncached. | Site and weighted MISO CF; validation. |
-| [BA scenario metrics](notebooks/data_flow/ba_scenario_metrics_generation.ipynb) | Combine synchronized load and CF into generation and net-load scenarios. | MISO load/CF and capacity metadata. | Six scenarios and full archive comparison. |
-| [Pooled scenario metrics](notebooks/data_flow/pooled_scenario_metrics_generation.ipynb) | Combine member load, generation, and capacity into MISO_NCA scenarios. | Five MISO subregions and capacity metadata. | MISO_NCA scenarios and full archive comparison. |
-| [Stress-event catalogs](notebooks/data_flow/ba_stress_event_catalog.ipynb) | Identify extended high-load, high-net-load, and low-renewable events. | BA/pool scenarios. | Toy example and four regional event catalogs. |
-| [State load generation](notebooks/data_flow/state_load_generation.ipynb) | Allocate BA demand to Iowa and apply annual demand pathways. | TaiESM1 BA/Iowa load and GCAM inputs; TELL. | Iowa year/case reconstruction and archived trajectories. |
+| Notebook | What it demonstrates |
+| --- | --- |
+| [County weather-point selection](notebooks/data_flow/county_weather_point_selection.ipynb) | Select a population-weighted weather point for Arthur County. |
+| [County weather and BA aggregation](notebooks/data_flow/county_hsds_download_and_ba_weather_aggregation.ipynb) | Aggregate county weather for MISO and Iowa. |
+| [TELL load forecasting](notebooks/data_flow/tell_load_forecast_data_flow.ipynb) | Train MISO demand models and validate forecasts against 2023 observations. |
+| [EIA-860 regridding](notebooks/data_flow/eia860_regridding_methodology.ipynb) | Map 2024 MISO renewable capacity to weather grids. |
+| [Site CF, weighting, and validation](notebooks/data_flow/site_cf_generation_ba_weighting_validation.ipynb) | Model and validate capacity-weighted MISO wind and solar CF. |
+| [BA scenario metrics](notebooks/data_flow/ba_scenario_metrics_generation.ipynb) | Calculate MISO generation and net load for six renewable portfolios. |
+| [Pooled scenario metrics](notebooks/data_flow/pooled_scenario_metrics_generation.ipynb) | Combine five MISO subregions into MISO_NCA scenario metrics. |
+| [Stress-event catalogs](notebooks/data_flow/ba_stress_event_catalog.ipynb) | Identify high-load, high-net-load, and low-renewable events in four regions. |
+| [State load generation](notebooks/data_flow/state_load_generation.ipynb) | Reconstruct Iowa demand and compare raw and GCAM-scaled trajectories. |
 
 ### Validation — 5 notebooks
 
-| Notebook | Role in workflow | Inputs / requirements | Outputs |
-| --- | --- | --- | --- |
-| [MISO load-duration curve](notebooks/validation/miso_load_duration_curve.ipynb) | Assess how well modeled demand reproduces the observed distribution. | Subregion observations and forecasts. | 2023 load-duration comparison. |
-| [All-BA 2023 load validation](notebooks/validation/all_ba_2023_load_forecast_validation.ipynb) | Assess demand-model performance across the available BA validation set. | Forecasts/observations for 58 entities. | Coverage, error metrics, and scatter plots. |
-| [MISO subregion load validation](notebooks/validation/miso_subregion_load_forecast_validation.ipynb) | Compare direct and subregion-based estimates of MISO demand. | Direct MISO and six subregion forecasts; actuals. | Direct-versus-summed load comparison. |
-| [MISO wind, solar, and load validation](notebooks/validation/miso_wind_solar_load_validation.ipynb) | Assess modeled components against observations and examine renewable losses. | MISO load, 2022 renewable fleet, and actuals. | Full-year loss sensitivity and January comparison. |
-| [Iowa historical/TaiESM1 comparison](notebooks/validation/state_historical_taiesm_validation.ipynb) | Diagnose differences between historical-weather and climate-model products. | Iowa weather, load, and CF from both collections. | Distributions, diagnostics, and pressure limitation. |
+| Notebook | What it demonstrates |
+| --- | --- |
+| [MISO load-duration curve](notebooks/validation/miso_load_duration_curve.ipynb) | Compare observed and modeled MISO load-duration curves for 2023. |
+| [All-BA 2023 load validation](notebooks/validation/all_ba_2023_load_forecast_validation.ipynb) | Compare 2023 demand forecasts and observations across 58 entities. |
+| [MISO subregion load validation](notebooks/validation/miso_subregion_load_forecast_validation.ipynb) | Compare direct MISO demand forecasts with the sum of six subregions. |
+| [MISO wind, solar, and load validation](notebooks/validation/miso_wind_solar_load_validation.ipynb) | Validate MISO load and renewable output and compare renewable-loss assumptions. |
+| [Iowa historical/TaiESM1 comparison](notebooks/validation/state_historical_taiesm_validation.ipynb) | Compare Iowa historical and TaiESM1 weather, load, and renewable CF. |
 
 ### Analysis — 4 notebooks
 
-| Notebook | Role in workflow | Inputs / requirements | Outputs |
-| --- | --- | --- | --- |
-| [Pairwise pooling heatmaps](notebooks/analysis/pairwise_pooling_heatmap.ipynb) | Quantify how geographic pooling changes threshold-relative shortfalls. | Scenarios for 10 BAs and MISO_SUBREGION_SUM. | 110 ordered-pair comparisons and heatmaps. |
-| [Monthly MISO event counts](notebooks/analysis/miso_monthly_event_counts.ipynb) | Examine the seasonality and duration of stress events. | Historical MISO event catalog. | Event frequency by month and duration. |
-| [Satellite and reanalysis context](notebooks/analysis/plot_satellite_and_reanalysis.ipynb) | Relate a selected stress event to surrounding weather conditions. | NASA Worldview and NOAA PSL access. | Weather context images. |
-| [Iowa seasonal risk hours](notebooks/analysis/state_seasonal_risk_hours.ipynb) | Compare seasonal stress across climate periods and renewable portfolios. | TaiESM1 Iowa scenarios, 2000–2099. | Seasonal risk hours across six portfolios. |
+| Notebook | What it demonstrates |
+| --- | --- |
+| [Pairwise pooling heatmaps](notebooks/analysis/pairwise_pooling_heatmap.ipynb) | Compare pooling effects across 110 ordered region pairs. |
+| [Monthly MISO event counts](notebooks/analysis/miso_monthly_event_counts.ipynb) | Summarize MISO stress events by month and duration. |
+| [Satellite and reanalysis context](notebooks/analysis/plot_satellite_and_reanalysis.ipynb) | View NASA/NOAA weather context for a selected stress event. |
+| [Iowa seasonal risk hours](notebooks/analysis/state_seasonal_risk_hours.ipynb) | Compare Iowa seasonal risk across six portfolios over 2000–2099. |
 
 ## Data
 
@@ -109,9 +109,9 @@ occurrence before rounding. See the
 [supporting peak summary](manifests/dataset_peak_load_summary_2019_2022.csv) for coverage, tie counts, sources,
 checksums, and screening settings.
 
-Peaks for `BANC`, `NSB`, `SEC`, `WECC` are withheld because source anomalies
-remain after screening. Their candidate maxima and review reasons are retained
-in the supporting summary.
+Peaks for `BANC`, `NSB`, `SEC`, `WECC` are best estimates from available
+observations after additional review and exclusion of suspect reports.
+Original candidates and exclusions are recorded in the supporting summary.
 
 <a id="load--wind--solar-35"></a>
 <a id="load--solar-only-16"></a>
@@ -129,7 +129,7 @@ in the supporting summary.
 | Avista Corporation | `AVA` | 2,514.0 | 2022-12-22 17:00 | 349.3 | 19.2 |
 | Avangrid Renewables LLC | `AVRN` | — | — | 1,695.9 | 322.0 |
 | Arizona Public Service Company | `AZPS` | 7,595.0 | 2020-07-31 01:00 | 628.5 | 919.5 |
-| Balancing Authority of Northern California | `BANC` | — | — | — | 338.6 |
+| Balancing Authority of Northern California | `BANC` | 4,882.0 | 2022-09-07 00:00 | — | 338.6 |
 | Bonneville Power Administration | `BPAT` | 11,068.0 | 2022-12-22 17:00 | 3,617.1 | 223.7 |
 | Public Utility District No. 1 of Chelan County | `CHPD` | 556.0 | 2022-12-22 17:00 | — | — |
 | California Independent System Operator | `CISO` | 51,104.0 | 2022-09-07 01:00 | 6,352.2 | 22,166.7 |
@@ -163,7 +163,7 @@ in the supporting summary.
 | MISO subregion 8910 | `MISO_8910` | 31,548.0 | 2022-06-22 22:00 | 184.5 | 3,793.7 |
 | New Brunswick System Operator | `NBSO` | — | — | 42.0 | 17.9 |
 | Nevada Power Company | `NEVP` | 9,357.0 | 2021-07-09 23:00 | 150.0 | 3,980.2 |
-| New Smyrna Beach Utilities Commission | `NSB` | — | — | — | — |
+| New Smyrna Beach Utilities Commission | `NSB` | 105.0 | 2019-07-02 21:00 | — | — |
 | NorthWestern Energy | `NWMT` | 2,600.0 | 2021-05-20 09:00 | 763.6 | 179.0 |
 | New York Independent System Operator | `NYIS` | 30,919.0 | 2021-06-29 22:00 | 2,739.3 | 2,517.4 |
 | PacifiCorp - East | `PACE` | 9,494.0 | 2022-07-19 00:00 | 3,984.8 | 2,196.4 |
@@ -176,7 +176,7 @@ in the supporting summary.
 | South Carolina Public Service Authority | `SC` | 5,342.0 | 2022-12-24 14:00 | — | 303.3 |
 | Dominion Energy South Carolina | `SCEG` | 4,800.0 | 2022-06-13 21:00 | — | 1,044.1 |
 | Seattle City Light | `SCL` | 1,906.0 | 2022-12-22 02:00 | — | — |
-| Seminole Electric Cooperative | `SEC` | — | — | — | 74.5 |
+| Seminole Electric Cooperative | `SEC` | 1,070.0 | 2020-09-16 21:00 | — | 74.5 |
 | Southeastern Power Administration | `SEPA` | — | — | — | 275.0 |
 | Southern Company Services, Inc. - Transmission | `SOCO` | 48,073.0 | 2022-06-15 21:00 | — | 5,485.9 |
 | Southwestern Power Administration | `SPA` | 154.0 | 2022-06-16 03:00 | 499.0 | 19.5 |
@@ -207,10 +207,9 @@ historical pools have six scenarios and stress catalogs.
 | MISO South aggregate | `MISO_SA` | 31,548.0 | 2022-06-22 22:00 | 184.5 | 3,793.7 |
 | Sum of all six MISO subregions | `MISO_SUBREGION_SUM` | 116,500.0 | 2019-07-19 21:00 | 32,150.7 | 13,574.9 |
 | Rest of East pool | `ROE` | 404,728.0 | 2019-07-17 22:00 | 51,006.4 | 45,899.4 |
-| Western pool | `WECC` | — | — | 31,300.5 | 40,775.9 |
+| Western pool | `WECC` | 143,047.0 | 2022-09-07 01:00 | 31,300.5 | 40,775.9 |
 
-<details>
-<summary>Pool membership</summary>
+#### Pool membership
 
 | Pool | Member BAs / subregions |
 | --- | --- |
@@ -224,16 +223,11 @@ The MISO pools overlap: MISO_SUBREGION_SUM combines MISO_NCA and MISO_SA.
 Do not add these alternative aggregates together. WECC and Rest of East
 represent the listed members, not complete geographic censuses.
 
-</details>
-
-<details>
-<summary>TaiESM1 BA and pool products</summary>
+#### TaiESM1 BA and pool products
 
 The eight TaiESM1 BA/subregion entities have weather, load, wind/solar CF,
 six-scenario metrics, and stress catalogs. Only MISO_SUBREGION_SUM is included
 as a pool.
-
-</details>
 
 #### States and District of Columbia
 
