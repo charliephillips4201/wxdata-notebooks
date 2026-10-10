@@ -11,15 +11,15 @@ separately through Zenodo.
 
 Power-system planning needs to represent hours when high electricity demand coincides with low wind or solar output. Synchronized weather, demand, and renewable capacity factors preserve these relationships across time and locations. Hourly resolution captures shortfalls and their duration; long records show seasonal and year-to-year variability. Historical and simulated climate collections support complementary investigations of these conditions.
 
-The workflow has two branches: weather becomes modeled electricity demand, while weather and generator fleets become renewable capacity factors. These ingredients feed scenario metrics, geographic pooling, and stress-event catalogs. State products extend the demand calculations to states. Validation assesses model performance and limitations; analysis demonstrates applications of the resulting datasets.
+The workflow has two branches: weather becomes modeled electricity demand, while weather and generator fleets become renewable capacity factors. These ingredients feed scenario metrics, geographic pooling, and stress-event catalogs. State products combine population-allocated BA load with nameplate-capacity-weighted site wind and solar profiles, supporting state scenario metrics and stress-event catalogs. Validation assesses model performance and limitations; analysis demonstrates applications of the resulting datasets.
 
 **Load and renewable capacity factors**
 
-[![Weather and fleet inputs become modeled load and renewable capacity factors, with notebook filenames labeling the corresponding stages.](process_flow_load_and_cf.png)](process_flow_load_and_cf.png)
+[![Weather and fleet inputs become BA and state load and renewable capacity factors, with site profiles weighted separately by BA and state.](process_flow_load_and_cf.png)](process_flow_load_and_cf.png)
 
 **Scenarios, pooling, and stress events**
 
-[![Synchronized load and renewable capacity factors feed BA scenarios, geographic pooling, and stress-event catalogs, with notebook filenames labeling the corresponding stages.](process_flow_scenarios_and_events.png)](process_flow_scenarios_and_events.png)
+[![BA and state load, renewable capacity factors, and nameplate capacity feed scenario metrics and stress-event catalogs, with a separate BA pooling branch.](process_flow_scenarios_and_events.png)](process_flow_scenarios_and_events.png)
 
 Filenames identify the notebooks linked in the index; click a diagram to enlarge it.
 
@@ -39,7 +39,7 @@ inline; exported files go to `data_outputs/`.
 | [County weather and BA aggregation](notebooks/data_flow/county_hsds_download_and_ba_weather_aggregation.ipynb) | Aggregate county weather for MISO and Iowa. |
 | [TELL load forecasting](notebooks/data_flow/tell_load_forecast_data_flow.ipynb) | Train MISO demand models and validate forecasts against 2023 observations. |
 | [EIA-860 regridding](notebooks/data_flow/eia860_regridding_methodology.ipynb) | Map 2024 MISO renewable capacity to weather grids. |
-| [Site CF, weighting, and validation](notebooks/data_flow/site_cf_generation_ba_weighting_validation.ipynb) | Model and validate capacity-weighted MISO wind and solar CF. |
+| [Site CF, weighting, and validation](notebooks/data_flow/site_cf_generation_ba_weighting_validation.ipynb) | Model and validate MISO wind/solar CF; demonstrate state weighting for MISO-contributed Iowa sites in the appendix (2022 fleet). |
 | [BA scenario metrics](notebooks/data_flow/ba_scenario_metrics_generation.ipynb) | Calculate MISO generation and net load for six renewable portfolios. |
 | [Pooled scenario metrics](notebooks/data_flow/pooled_scenario_metrics_generation.ipynb) | Combine five MISO subregions into MISO_NCA scenario metrics. |
 | [Stress-event catalogs](notebooks/data_flow/ba_stress_event_catalog.ipynb) | Identify high-load, high-net-load, and low-renewable events in four regions. |
