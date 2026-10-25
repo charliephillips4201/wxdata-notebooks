@@ -26,6 +26,9 @@ Filenames identify the notebooks linked in the index; click a diagram to enlarge
 <a id="quick-start"></a>
 <a id="install-and-run-the-first-example"></a>
 
+To set up the environment and run a bundled-data example, see
+[Running the notebooks](RUNNING_NOTEBOOKS.md).
+
 ## Notebook index
 
 Each notebook states its inputs, assumptions, and calculations. Results appear
@@ -79,7 +82,7 @@ Each notebook lists any additional software or external-data requirements.
 Sample files are bundled in `data_inputs/examples/` and require no extraction.
 Other supporting inputs are in `data_inputs/`; generated results go to `data_outputs/`.
 
-The [input manifest](manifests/notebook_inputs.csv) records each bundled file's
+The [input manifest](manifests/notebook_inputs.csv) records each selected release sample's
 source, selected years/columns/scenarios, notebook consumers, size, and checksum.
 Its `path` locates the bundled file; `source_path` identifies the original
 archive-relative release file.
