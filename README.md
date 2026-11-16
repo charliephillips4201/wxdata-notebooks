@@ -2,20 +2,27 @@
 
 ## Overview
 
-This repository contains companion notebooks and selected sample data used by
-the examples. The samples contain selected regions, years, variables, and
-scenarios. The full dataset and detailed coverage documentation are provided
-separately through Zenodo.
+# Synchronized Wind, Solar, and Load Data for Power System Planning
 
-[Full dataset on Zenodo (unpublished draft preview)][zenodo-preview].
+This repository contains a suite of Jupyter notebooks and their supporting data inputs showing the methods/data flow to create a set of hourly, multi-decadal, synchronized weather, electricity demand (load), wind capacity factor (CF), solar CF, and net load data products. It also shows the verification of these created load/wind CF/solar CF datasets against actuals from EIA datasets, and it shows some analysis products using these created datasets. The goal of this repository is to provide transparency into how these datasets are created and validated so that the user can have confidence when using them in power-system related applications.
 
-Power-system planning needs to represent hours when high electricity demand coincides with low wind or solar output. Synchronized weather, demand, and renewable capacity factors preserve these relationships across time and locations. Hourly resolution captures shortfalls and their duration; long records show seasonal and year-to-year variability. Historical and simulated climate collections support complementary investigations of these conditions.
+The large analysis-ready datasets are distributed separately through Zenodo
+DOI [10.5281/zenodo.21844870](https://doi.org/10.5281/zenodo.21844870).
 
-The workflow has two branches: weather becomes modeled electricity demand, while weather and generator fleets become renewable capacity factors. These ingredients feed scenario metrics, geographic pooling, and stress-event catalogs. State products combine population-allocated BA load with nameplate-capacity-weighted site wind and solar profiles, supporting state scenario metrics and stress-event catalogs. Validation assesses model performance and limitations; analysis demonstrates applications of the resulting datasets.
+These datasets are meant to be used for power system modeling applications or analyses that require hourly resolution and spatiotemporal correlation between meteorological variables. Examples include hourly SCUC/SCED modeling and hourly, full sequential Monte Carlo resource adequacy evaluations. The datasets can also be used to identify extreme events as a function of resource mix and quantify the benefit in pooling together BAs with non-coincident net load peaks. Finally, the hourly values can be aggregated into hourly or seasonal capacity factors to maintain computational tractability for long-term expansion planning models.  
+
+The workflow has two branches, the "Load Forecast Process" and the "Wind/Solar CF Process." These are shown below. The BA-level outputs resulting from these data flows can then be used to calculate state-level outputs.
 
 **Load and renewable capacity factors**
 
 [![Weather and fleet inputs become BA and state load and renewable capacity factors, with site profiles weighted separately by BA and state.](process_flow_load_and_cf.png)](process_flow_load_and_cf.png)
+
+These outputs are then used to create hourly net load and equivalent renewable CF values (together called "scenario metrics") for 6 different capacity ratios of wind and solar: 0/100, 25/75, 50/50, 75/25, 100/0, and actual EIA-860 actual mix (based on 2024 EIA-860 data). This gives 6 net load timeseries, 6 renewable CF timeseries, and 1 load timeseries for each BA containing wind CF, solar CF, and load, for a total of 13 "scenario metrics" per BA. BAs missing wind CF (due to no wind generators) or solar CF (due to no solar generators) only have 1 net load timeseries and 1 renewable CF timeseries. 
+
+These "scenario metrics" can similarly be applied for pools of BAs or for states.
+
+Finally, consecutive hours where values of each scenario metric are below a certain threshold for renewable CF, or above a certain threshold for load/net load, can be grouped together as "stress events." Identifying stress events in the renewable CF, net load, and load datasets is critical for correlating historical extreme weather events to instances with high nodal prices in a production cost model or expected unserved energy in a resource adequacy model. This allows modelers to draw a direct link between weather patterns and their impact on the economics and reliability of the power system, and how those impacts vary as a function of resource mix. 
+
 
 **Scenarios, pooling, and stress events**
 
@@ -31,6 +38,14 @@ To set up the environment and run a bundled-data example, see
 
 ## Notebook index
 
+The notebooks are split into three groups: "data flow," "validation," and "analysis."
+
+The data flow notebooks show the end-to-end process by which the BA-level load and wind/solar CF datasets are created, along with their derivative products (BA scenario metrics, pooled scenario metrics, stress event catalogs, and state load).
+
+The validation notebooks show the BA-level load forecasts and wind/solar generation forecasts (i.e. --> wind/solar CF are multiplied by their nameplate capacity shares using EIA-860 data) validated against EIA-930 data, and they also show how the historical weather dataset for the state of Iowa (from WTK/BCHRRR for wind energy variables and NSRDB for solar energy variables) compares to the sup3rCC dataset, which is a climate dataset created by using generative AI to downscale daily, low-resolution climate models to hourly, high-resolution datasets adequate for production cost and resource adequacy modeling.
+
+The analysis notebooks show some analysis that can be done from the BA scenario metrics, stress event catalogs, and state load created through the "data flow" pipeline. The examples given show how an hourly, synchronized wind/solar/load dataset can be used to quantify the benefits realized by pooling BAs with different weather regimes/resources mixes, can be used to isolate meteorological patterns that could pose energy adequacy risks, and can be used to identify how risk hours may shift in future climates for a given region. 
+
 Each notebook states its inputs, assumptions, and calculations. Results appear
 inline; exported files go to `data_outputs/`.
 
@@ -38,72 +53,65 @@ inline; exported files go to `data_outputs/`.
 
 | Notebook | What it demonstrates |
 | --- | --- |
-| [County weather-point selection](notebooks/data_flow/county_weather_point_selection.ipynb) | Select a population-weighted weather point for Arthur County. |
-| [County weather and BA aggregation](notebooks/data_flow/county_hsds_download_and_ba_weather_aggregation.ipynb) | Aggregate county weather for MISO and Iowa. |
-| [TELL load forecasting](notebooks/data_flow/tell_load_forecast_data_flow.ipynb) | Train MISO demand models and validate forecasts against 2023 observations. |
-| [EIA-860 regridding](notebooks/data_flow/eia860_regridding_methodology.ipynb) | Map 2024 MISO renewable capacity to weather grids. |
+| [County weather-point selection](notebooks/data_flow/county_weather_point_selection.ipynb) | Calculate the population-weighted lat/lon for a U.S. county. |
+| [County weather and BA aggregation](notebooks/data_flow/county_hsds_download_and_ba_weather_aggregation.ipynb) | Regrid pop-weighted county lat/lon to weather dataset grid id, download weather dataset at grid id, and create population-weighted weather datasets at BA level (ex: MISO) and state level (ex: Iowa). |
+| [TELL load forecasting](notebooks/data_flow/tell_load_forecast_data_flow.ipynb) | Create load forecasts from BA-level weather datasets using TELL Python Package. Includes validation of load forecasts against 2023 EIA-930 obs. |
+| [EIA-860 regridding](notebooks/data_flow/eia860_regridding_methodology.ipynb) | Identify lat/lon/capacity of solar/wind generators from EIA-860 and regrid those lat/lon to weather dataset grid id. |
 | [Site CF, weighting, and validation](notebooks/data_flow/site_cf_generation_ba_weighting_validation.ipynb) | Model and validate MISO wind/solar CF; demonstrate state weighting for MISO-contributed Iowa sites in the appendix (2022 fleet). |
-| [BA scenario metrics](notebooks/data_flow/ba_scenario_metrics_generation.ipynb) | Calculate MISO generation and net load for six renewable portfolios. |
-| [Pooled scenario metrics](notebooks/data_flow/pooled_scenario_metrics_generation.ipynb) | Combine five MISO subregions into MISO_NCA scenario metrics. |
-| [Stress-event catalogs](notebooks/data_flow/ba_stress_event_catalog.ipynb) | Identify high-load, high-net-load, and low-renewable events in four regions. |
-| [State load generation](notebooks/data_flow/state_load_generation.ipynb) | Reconstruct Iowa demand and compare raw and GCAM-scaled trajectories. |
+| [BA scenario metrics](notebooks/data_flow/ba_scenario_metrics_generation.ipynb) | Calculate BA-level net load and renewable CF for various wind/solar capacity ratios. |
+| [Pooled scenario metrics](notebooks/data_flow/pooled_scenario_metrics_generation.ipynb) | Calculate pooled net load and renewable CF for various wind/solar capacity ratios (ex: combine five MISO subregions into MISO_NCA scenario metrics) |
+| [Stress-event catalogs](notebooks/data_flow/ba_stress_event_catalog.ipynb) | Identify high-load, high-net-load, and low-renewable events from scenario_metrics dataset. |
+| [State load generation](notebooks/data_flow/state_load_generation.ipynb) | Using sup3rCC climate dataset, reconstruct state-level demand (ex: Iowa) and compare raw and GCAM-scaled trajectories through 2100. |
 
 ### Validation — 5 notebooks
 
 | Notebook | What it demonstrates |
 | --- | --- |
-| [MISO load-duration curve](notebooks/validation/miso_load_duration_curve.ipynb) | Compare observed and modeled MISO load-duration curves for 2023. |
-| [All-BA 2023 load validation](notebooks/validation/all_ba_2023_load_forecast_validation.ipynb) | Compare 2023 demand forecasts and observations across 58 entities. |
-| [MISO subregion load validation](notebooks/validation/miso_subregion_load_forecast_validation.ipynb) | Compare direct MISO demand forecasts with the sum of six subregions. |
-| [MISO wind, solar, and load validation](notebooks/validation/miso_wind_solar_load_validation.ipynb) | Validate MISO load and renewable output and compare renewable-loss assumptions. |
-| [Iowa historical/TaiESM1 comparison](notebooks/validation/state_historical_taiesm_validation.ipynb) | Compare Iowa historical and TaiESM1 weather, load, and renewable CF. |
+| [BA load-duration curve](notebooks/validation/miso_load_duration_curve.ipynb) | Compare observed and modeled BA (ex: MISO) load-duration curves for 2023. |
+| [All-BA 2023 load validation](notebooks/validation/all_ba_2023_load_forecast_validation.ipynb) | Compare 2023 demand forecasts and observations across all available load BAs (58 total). |
+| [MISO subregion load validation](notebooks/validation/miso_subregion_load_forecast_validation.ipynb) | Compare direct MISO demand forecasts with the sum of six MISO subregions. |
+| [BA wind, solar, and load validation](notebooks/validation/miso_wind_solar_load_validation.ipynb) | Validate simulated BA (ex: MISO) load and renewable output against EIA-930 actuals and compare renewable-loss assumptions. |
+| [Iowa historical/TaiESM1 comparison](notebooks/validation/state_historical_taiesm_validation.ipynb) | Compare state (ex: Iowa) historical (WTK/BCHRRR/NSRDB) and TaiESM1 weather, load, and renewable CF. |
 
 ### Analysis — 4 notebooks
 
 | Notebook | What it demonstrates |
 | --- | --- |
-| [Pairwise pooling heatmaps](notebooks/analysis/pairwise_pooling_heatmap.ipynb) | Compare pooling effects across 110 ordered region pairs. |
-| [Monthly MISO event counts](notebooks/analysis/miso_monthly_event_counts.ipynb) | Summarize MISO stress events by month and duration. |
+| [Pairwise pooling heatmaps](notebooks/analysis/pairwise_pooling_heatmap.ipynb) | Compare pooling benefits for different ordered BA pairs. |
+| [Monthly BA event counts](notebooks/analysis/miso_monthly_event_counts.ipynb) | Summarize & plot BA (ex: MISO) stress events by month and duration. |
 | [Satellite and reanalysis context](notebooks/analysis/plot_satellite_and_reanalysis.ipynb) | View NASA/NOAA weather context for a selected stress event. |
-| [Iowa seasonal risk hours](notebooks/analysis/state_seasonal_risk_hours.ipynb) | Compare Iowa seasonal risk across six portfolios over 2000–2099. |
+| [Sate seasonal risk hours](notebooks/analysis/state_seasonal_risk_hours.ipynb) | Compare state-level (ex: Iowa) seasonal risk across six portfolios over 2000–2099. |
 
 ## Data
 
-### Sample data included in this repository
+### Data file catalog
 
 <a id="bundled-notebook-inputs"></a>
 
-The repository includes **94 selected release inputs**:
-86 historical files and 8 TaiESM1 files, totaling approximately **457 MB**.
-The samples retain selected regions, years, columns, or scenarios;
-they are not complete copies of the released datasets.
-Each notebook lists any additional software or external-data requirements.
+| Folder | Contents and purpose |
+|---|---|
+| [data_inputs/examples/](data_inputs/examples/) | Selected wxdata products: BA and state-level weather, load, wind/solar capacity factors, scenario metrics, and stress-event results. |
+| [data_inputs/eia860/](data_inputs/eia860/) | EIA-860 generator records, weather-grid mappings, and fleet-specific capacity-factor references. |
+| [data_inputs/load_actuals/](data_inputs/load_actuals/) and [data_inputs/renewable_actuals/](data_inputs/renewable_actuals/) | Observed EIA-930 electricity demand and wind/solar generation used for model training and validation. |
+| [data_inputs/county_weather/](data_inputs/county_weather/) | County populations, county-to-BA service territory mappings, and lat/lon used for county-level weather data downloads. |
+| [data_inputs/gcam_usa/](data_inputs/gcam_usa/) | Eight GCAM-USA electricity-demand scenario CSVs used to scale modeled hourly state load to annual demand targets. |
+| [data_inputs/model_parameters/](data_inputs/model_parameters/) | SAM wind/solar configurations, loss assumptions, and weather-source selections used in the calculations. |
+| [data_inputs/validation/](data_inputs/validation/) | Saved load predictions and BA metadata used by validation notebooks. |
+| [manifests/](manifests/) | Sample-file provenance and checksums, fleet capacities, scenario metadata, and peak-load summaries. |
+| [data_outputs/](data_outputs/) | Figures, tables, model results, and caches generated locally when notebooks run. |
 
-Sample files are bundled in `data_inputs/examples/` and require no extraction.
-Other supporting inputs are in `data_inputs/`; generated results go to `data_outputs/`.
+The `data_inputs/examples/` folder contains **94 precomputed sample files** (86 historical files and 8 TaiESM1 files, totaling approximately **457 MB**)
+These totals exclude the other supporting inputs listed above. 
 
-The [input manifest](manifests/notebook_inputs.csv) records each selected release sample's
-source, selected years/columns/scenarios, notebook consumers, size, and checksum.
-Its `path` locates the bundled file; `source_path` identifies the original
-archive-relative release file.
+These files are a sample from the full Zenodo dataset. For their coverage,
+source paths, notebook consumers, and checksums, see the
+[input manifest](manifests/notebook_inputs.csv).
+
+Some notebook stages require additional software or external data access.
+See [Running the notebooks](RUNNING_NOTEBOOKS.md) and the requirements stated
+in each notebook.
 
 ### Full dataset on Zenodo
-
-<a id="ba-pools"></a>
-<a id="balancing-authorities-and-miso-subregions"></a>
-<a id="coverage"></a>
-<a id="download-and-extract"></a>
-<a id="gcam-usa-demand-cases"></a>
-<a id="load--solar-only-16"></a>
-<a id="load--wind--solar-35"></a>
-<a id="load-only-9"></a>
-<a id="pool-membership"></a>
-<a id="solar-only-3"></a>
-<a id="states-and-district-of-columbia"></a>
-<a id="taiesm1-ba-and-pool-products"></a>
-<a id="verify-the-download"></a>
-<a id="wind-and-solar-only-2"></a>
-<a id="wind-only-3"></a>
 
 The [unpublished draft preview on Zenodo][zenodo-preview] provides the full
 collections and their detailed `README_DATASET.md`, including regional coverage,
@@ -116,31 +124,51 @@ Download and extract full archives **outside this repository**, separate from
 the bundled sample directories. Update notebook paths when using the full data;
 do not extract archives over the bundled files.
 
-## Interpretation
+### HSDS and external data access
 
-- **Modeled quantities:** demand is modeled; net load is demand minus modeled
-  wind and solar generation. Equivalent renewable CF is combined renewable
-  generation divided by combined nameplate capacity.
-- **Fleets and scenarios:** the fixed 2024 fleet supports the installed mix and
-  wind/solar nameplate splits of 0/100, 25/75, 50/50, 75/25, and 100/0. Shares
-  describe capacity, not energy. Single-technology BA entities have two
-  portfolios; load-only BAs have one. Renewable-only entities have no net load.
-  Renewable validation uses a separate **2022 fleet**. Source CF and
-  loss-adjusted scenario CF should not be interchanged.
-- **Time alignment:** all timestamps are UTC. Historical load/weather retain
-  leap days; renewable CF omits them. TaiESM1 uses a no-leap calendar and
-  supports statistical comparisons, not matching observed weather events.
-- **Pooling:** CF is capacity-weighted; these aggregates do not model
-  transmission or dispatch constraints. Direct MISO, its subregions, and its
-  overlapping pools are alternative representations and are not additive.
-- **Events:** catalog net-load thresholds are shared across portfolios within
-  each region. Events can bridge one non-risk hour, included in duration.
-  The stress-catalog and analysis notebooks explain their different thresholds
-  and counting conventions.
-- **Known pressure limitation:** Iowa's TaiESM1 pressure averages about
-  **9,369 Pa below the historical series** over 2007–2023. The source/grid cause
-  remains unresolved; no correction has been applied. See the
-  [Iowa diagnostics](notebooks/validation/state_historical_taiesm_validation.ipynb).
+Some data-flow stages use National Lab of Rockies Highly Scalable Data Service **HSDS** to read WTK, NSRDB, BCHRRR, and SUP3RCC data. County-point selection and EIA-860 regridding use it forgrid matching; county-weather and site-weather downloads use it when compatible local caches are unavailable.
+
+The notebooks currently expect a local HSDS service at
+`http://localhost:5101`, configured to access the `nrel-pds-hsds` bucket.
+Creating the Conda environment does not configure or start this service.
+Weather caches are not bundled with the repository.
+
+HSDS is not needed to view saved notebook results or run examples that use only
+bundled inputs. See [Running the notebooks](RUNNING_NOTEBOOKS.md) for
+stage-specific requirements and the relevant notebook cells for connection
+settings.
+
+Instructions for setting up a local HSDS server can be found here: https://web.archive.org/web/20250423214155/https://nrel.github.io/rex/misc/examples.hsds.html#setting-up-a-local-hsds-server
+
+## Important notes for using the data
+
+- **Fleet assumptions:** Scenario calculations use a fixed 2024 reference
+  fleet; renewable validation uses a separate 2022 fleet. Wind/solar percentages
+  describe shares of nameplate capacity. Their shares of generated energy vary
+  with weather.
+
+- **Time alignment:** Align hourly data by UTC timestamp. Historical load and
+  weather include February 29; renewable capacity factors and combined
+  historical scenario metrics omit it. TaiESM1 uses a no-leap calendar and
+  supports statistical climate comparisons rather than matching individual
+  observed weather events.
+
+- **Pooling:** Regional capacity factors are capacity-weighted. Pooling does
+  not simulate transmission or dispatch constraints. Total MISO, its subregions,
+  and overlapping pools represent alternative groupings and should not be
+  added together.
+
+For detailed portfolio definitions and loss adjustments, see
+[scenario calculations](notebooks/data_flow/ba_scenario_metrics_generation.ipynb).
+For event thresholds and grouping rules, see
+[stress-event catalogs](notebooks/data_flow/ba_stress_event_catalog.ipynb).
+
+## Known limitations
+
+Iowa's TaiESM1 pressure averages approximately **9,369 Pa below the historical
+series** over 2007–2023. The upstream cause remains unresolved, and no correction
+has been applied. See the
+[Iowa diagnostics](notebooks/validation/state_historical_taiesm_validation.ipynb).
 
 ## Sources and citation
 
@@ -166,7 +194,6 @@ Site-CF validation used legacy weather caches without original source-version
 metadata. Dataset and notebook versions are independent; consult Zenodo for
 release availability and retain the notebook revision with your results.
 
-OpenAI Codex assisted with code and documentation. Charlie Phillips reviewed
-the work and remains responsible for its content and interpretation.
+AI Disclaimer: OpenAI Codex assisted with writing code and documentation
 
 [zenodo-preview]: https://zenodo.org/records/21844870?preview=1&token=eyJhbGciOiJIUzUxMiJ9.eyJpZCI6ImU1YTZmOTdhLTg1Y2YtNGExMC1hMzdmLTY1NThjMGRjYzg0NyIsImRhdGEiOnt9LCJyYW5kb20iOiI4NThhZTRkYjg5OWNkNjg3MjM1NTBhYjAwYzg2NWU5YiJ9.kYx9A2TU38HVcXgbed38NuUok4_YGhmQ3K7MivkrsoIbPh9I--8NjqIJIjdHz5mhtkUs9elFEc7OdQBQn4bULQ
