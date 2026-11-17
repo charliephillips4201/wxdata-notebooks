@@ -4,6 +4,21 @@ Saved results can be reviewed on GitHub without installing anything. Use this
 guide to run the notebooks locally; dataset coverage and interpretation are in
 the [README](README.md).
 
+## Get the repository
+
+With Git installed, open a terminal in the directory where you want the checkout:
+
+```shell
+git clone https://github.com/charliephillips4201/wxdata-notebooks.git
+cd wxdata-notebooks
+```
+
+Alternatively, choose **Code → Download ZIP** on the
+[GitHub repository](https://github.com/charliephillips4201/wxdata-notebooks), extract
+the ZIP, and open a terminal in the extracted folder containing `environment.yml`.
+The selected example data are included; the first example does not require the
+full Zenodo archives.
+
 ## Set up the environment
 
 With Conda installed, run these commands from the repository root (the folder
@@ -45,6 +60,10 @@ folders. Each notebook states its inputs and writes generated files under
 `data_outputs/` where applicable. The [notebook index](README.md#notebook-index)
 lists the other examples and their requirements.
 
+Examples with bundled inputs can run independently. You do not need to execute
+the entire data-flow pipeline first; check the selected notebook's requirements,
+then run its cells from top to bottom.
+
 ## Notebooks with additional requirements
 
 | Notebook or stage | What rerunning requires |
@@ -59,3 +78,18 @@ The environment specification includes the modeling libraries; it does not
 start an HSDS service or supply its access configuration. Acquisition settings
 and cache checks are beside the relevant notebook stages. Acquisition H5 caches
 are not bundled with the repository.
+
+## Troubleshooting
+
+- **Missing imports or the wrong Python environment:** select **Python (wxdata-notebooks)**
+  under **Kernel → Change Kernel**, then restart the kernel and run all cells.
+  If that kernel is missing, activate the Conda environment and repeat the kernel
+  registration command above.
+- **Missing input files:** keep notebooks in their original folders and confirm
+  that the repository's `data_inputs/` folder was cloned or extracted too. Paths
+  are relative to each notebook folder. Keep the example's documented year and
+  region when using bundled data; another selection may require full-release inputs.
+- **Connection refused at `localhost:5101`:** a required local HSDS service is not
+  reachable. Follow the [HSDS guidance](README.md#hsds-and-external-data-access)
+  and the notebook's connection settings. Creating the Conda environment does not
+  start HSDS; the first example above does not need it.
