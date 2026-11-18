@@ -1,69 +1,25 @@
 # Dataset parameters
 
-Regional coverage, reference-fleet capacities, and peak loads for the full release,
-with **†** identifying entities that also have example products in this GitHub checkout.
-For installation and execution, see [Running the notebooks](RUNNING_NOTEBOOKS.md).
+The regional tables describe the full historical release available through the
+[unpublished Zenodo draft preview][zenodo-preview]. GitHub includes selected examples
+from the collections below.
 
-- [Full dataset and GitHub examples](#full-dataset-and-github-examples)
-- [Balancing authorities and MISO subregions](#balancing-authorities-and-miso-subregions)
-- [States and District of Columbia](#states-and-district-of-columbia)
-- [BA pools and membership](#ba-pools-and-membership)
-- [Sources and interpretation](#sources-and-interpretation)
-
-## Full dataset and GitHub examples
-
-The full curated collections are available through the
-[unpublished Zenodo draft preview][zenodo-preview], with their detailed
-`README_DATASET.md`. The reserved DOI is
-[10.5281/zenodo.21844870](https://doi.org/10.5281/zenodo.21844870), active after publication.
-The GitHub repository contains selected example products, not complete copies
-of those collections.
+[BAs](#balancing-authorities-and-miso-subregions) · [States](#states-and-district-of-columbia) · [Pools](#ba-pools-and-membership)
 
 | Collection | Weather sources | Coverage |
 | --- | --- | --- |
 | Historical, 2007–2023 | WTK, 2007–2014; BC-HRRR, 2015–2023; NSRDB solar, 2007–2023. | 68 BA-level entities, five pools, and the lower 48 states plus DC. |
 | TaiESM1, 2000–2099 | Sup3rCC v0.2.2: historical experiment, 2000–2014; SSP2-4.5, 2015–2099. | AECI, SWPP, six MISO subregions, MISO_SUBREGION_SUM, and Iowa. |
 
-The parameter tables below describe the **full historical release**. Their full
-list of entities does not imply that those entities are also in the smaller
-TaiESM1 collection. Product availability varies by entity. A † marker means at
-least one example in either collection is bundled; it does not mean that all
-products, years, or scenarios for that entity are included.
-
-For example, Iowa's bundled TaiESM1 load spans 2000–2099 with raw load and eight
-GCAM cases, but its wind/solar CF examples span only 2007–2023. Its bundled
-TaiESM1 scenario table spans 2000–2099 but retains only `time_utc`, `scenario`,
-`net_load_mw__raw`, and `renew_cf_equiv`. The
-[input manifest](manifests/notebook_inputs.csv) records the exact file selections.
-Other supporting observations, mappings, and model parameters are listed in the
-[README data file catalog](README.md#data-file-catalog).
+- **Capacities:** 2024 modeled onshore-wind/PV nameplate MW. **Peaks:** 2019–2022;
+  timestamps are UTC.
+- **†:** At least one example from either collection is bundled; years, columns,
+  or scenarios may be limited. See the [input manifest](manifests/notebook_inputs.csv).
+- **—:** Zero modeled capacity, or unavailable peak information.
 
 ## Balancing authorities and MISO subregions
 
-The historical release contains **68 BA-level entities: 62 BA codes and six MISO
-subregions**. Modeled-load availability is separate from observed-peak availability.
-
-**2024 reference-fleet capacities; 2019–2022 peaks.** Wind and solar values are
-nameplate MW for the dataset's modeled onshore-wind/PV fleet. They do not
-describe the changing fleet in each peak year or every real-world resource.
-**Observed BA peaks** use quality-screened EIA-930 hourly demand during 2019–2022,
-without interpolation. These are maxima of the available screened observations;
-some records have missing hours.
-
-In capacity columns, **—** means zero capacity in the modeled fleet. In peak
-columns, **—** means no usable peak or timestamp. Dates and hours are UTC.
-A zero-capacity BA CF product can be absent or an all-zero placeholder.
-Peaks for `BANC`, `NSB`, `SEC` use reviewed best estimates after exclusion of suspect reports.
-Peaks for `PJM` include reviewed reporting-anomaly exclusions.
-See the [peak summary](manifests/dataset_peak_load_summary_2019_2022.csv) for missing-hour
-coverage, screening, review decisions, source checksums, and tie counts.
-
-**† GitHub examples available.** At least one product for this entity is included
-in `data_inputs/examples/`. Bundled examples may contain selected years, columns,
-or scenarios—not the entity's complete Zenodo data. See the
-[input manifest](manifests/notebook_inputs.csv) for exact selections.
-An unmarked code has no release-derived example product in that manifest;
-supporting observations or metadata alone are not marked.
+Screened EIA-930 observed peaks.
 
 | Name | Code | Observed peak load (MW, 2019–2022) | Peak load time (UTC) | Wind nameplate (MW) | Solar nameplate (MW) |
 | --- | --- | ---: | --- | ---: | ---: |
@@ -138,28 +94,7 @@ supporting observations or metadata alone are not marked.
 
 ## States and District of Columbia
 
-The historical state products cover **49 entities: the contiguous 48 states and
-DC**, excluding Alaska and Hawaii. The curated TaiESM1 state collection covers Iowa.
-
-**2024 reference-fleet capacities; 2019–2022 peaks.** Wind and solar values are
-nameplate MW for the dataset's modeled onshore-wind/PV fleet. They do not
-describe the changing fleet in each peak year or every real-world resource.
-**Modeled state peaks** use BC-HRRR/NSRDB-driven `load_mw__raw` during 2019–2022,
-without GCAM scaling. They are not observed state demand peaks.
-
-In capacity columns, **—** means zero capacity in the modeled fleet. In peak
-columns, **—** means no usable peak or timestamp. Dates and hours are UTC.
-For states, a zero modeled wind or solar capacity means the corresponding CF
-file is absent. There are 40 nonzero state wind profiles and 48 nonzero solar profiles.
-See the [peak summary](manifests/dataset_peak_load_summary_2019_2022.csv) for missing-hour
-coverage, screening, review decisions, source checksums, and tie counts.
-
-**† GitHub examples available.** At least one product for this entity is included
-in `data_inputs/examples/`. Bundled examples may contain selected years, columns,
-or scenarios—not the entity's complete Zenodo data. See the
-[input manifest](manifests/notebook_inputs.csv) for exact selections.
-An unmarked code has no release-derived example product in that manifest;
-supporting observations or metadata alone are not marked.
+Modeled BC-HRRR/NSRDB raw-load peaks, without GCAM scaling.
 
 | Name | Code | Modeled peak load (MW, 2019–2022) | Peak load time (UTC) | Wind nameplate (MW) | Solar nameplate (MW) |
 | --- | --- | ---: | --- | ---: | ---: |
@@ -215,29 +150,8 @@ supporting observations or metadata alone are not marked.
 
 ## BA pools and membership
 
-The historical release includes **five BA pools**. The curated TaiESM1 collection
-includes `MISO_SUBREGION_SUM`; the other historical pools are not implied to be included.
-
-**2024 reference-fleet capacities; 2019–2022 peaks.** Wind and solar values are
-nameplate MW for the dataset's modeled onshore-wind/PV fleet. They do not
-describe the changing fleet in each peak year or every real-world resource.
-**Observed pool peaks** use synchronized sums of member EIA-930 demand during
-2019–2022, keeping only hours when every required load-bearing member is valid.
-They are not sums of the members' individual peak loads. Renewable capacities
-are summed over the pool's modeled reference fleet.
-
-In capacity columns, **—** means zero capacity in the modeled fleet. In peak
-columns, **—** means no usable peak or timestamp. Dates and hours are UTC.
-Peaks for `WECC` use reviewed best estimates after exclusion of suspect reports.
-See the [peak summary](manifests/dataset_peak_load_summary_2019_2022.csv) for missing-hour
-coverage, screening, review decisions, source checksums, and tie counts.
-
-**† GitHub examples available.** At least one product for this entity is included
-in `data_inputs/examples/`. Bundled examples may contain selected years, columns,
-or scenarios—not the entity's complete Zenodo data. See the
-[input manifest](manifests/notebook_inputs.csv) for exact selections.
-An unmarked code has no release-derived example product in that manifest;
-supporting observations or metadata alone are not marked.
+Coincident EIA-930 observed peaks use hours valid for every required load-bearing
+member, not sums of the members' individual peak loads.
 
 | Name | Code | Observed peak load (MW, 2019–2022) | Peak load time (UTC) | Wind nameplate (MW) | Solar nameplate (MW) |
 | --- | --- | ---: | --- | ---: | ---: |
@@ -257,32 +171,33 @@ supporting observations or metadata alone are not marked.
 | `ROE` (27) | `AEC`, `AECI`, `CPLE`, `DUK`, `FMPP`, `FPC`, `FPL`, `GVL`, `HST`, `ISNE`, `JEA`, `LGEE`, `NSB`, `NYIS`, `PJM`, `SC`, `SCEG`, `SEC`, `SOCO`, `SPA`, `SWPP`, `TAL`, `TEC`, `TVA`, `CPLW`, `NBSO`, `SEPA` |
 | `WECC` (32) | `AVA`, `AZPS`, `BANC`, `BPAT`, `CHPD`, `CISO`, `DOPD`, `EPE`, `GCPD`, `IID`, `IPCO`, `LDWP`, `NEVP`, `NWMT`, `PACE`, `PACW`, `PGE`, `PNM`, `PSCO`, `PSEI`, `SCL`, `SRP`, `TEPC`, `TIDC`, `TPWR`, `WACM`, `WALC`, `WAUW`, `AVRN`, `GRIS`, `GWA`, `WWA` |
 
-The MISO pools overlap: MISO_SUBREGION_SUM combines MISO_NCA and MISO_SA.
-Do not add these alternative aggregates together. WECC and Rest of East
-represent the listed members, not complete geographic censuses.
-Direct `MISO`, its subregions, and overlapping pools are alternative groupings;
-do not count them together. The peak summary identifies the load-bearing members
-used for each pool's observed peak; that subset can differ from its full membership.
+MISO, its subregions, and their pools overlap; do not add them together.
+WECC and ROE cover only their listed members.
 
-## Sources and interpretation
+<a id="sources-and-interpretation"></a>
+<details>
+<summary>Methods and sources</summary>
 
-Peak timestamps identify UTC hours. Exact tied maxima use their earliest
-occurrence before rounding. Displayed values use one decimal place; the
-[peak summary](manifests/dataset_peak_load_summary_2019_2022.csv) retains unrounded peaks, original
-candidates, review decisions, source identifiers, and checksums.
+**Peak notes**
 
-Capacities and regional identities come from these reviewed historical-release
-metadata files under `wxdata/paper_data/manifests/`:
+- The quality checks on EIA-930 data are demonstrated in **Step 3** of
+  [TELL load forecasting](notebooks/data_flow/tell_load_forecast_data_flow.ipynb).
+  Missing hours remain unfilled and can affect the recorded peak.
+- Suspect EIA-930 data (which otherwise would have been the peak load) was flagged in BANC, NSB, SEC, and PJM. Those readings were excluded from both BA and pooled peak calculations.
+- Values are displayed to one decimal. When unrounded peaks tie, the earliest
+  hour is shown.
 
-- `eia860_2024_operable_capacity_manifest_wtk_bchrrr_nsrdb_2007_2023.csv`
-- `state_scenario_metric_metadata_manifest_wtk_bchrrr_nsrdb_2007_2023.csv`
-- `pooled_region_scenario_metric_metadata_manifest_wtk_bchrrr_nsrdb_2007_2023.csv`
-- `dataset_peak_load_summary_2019_2022.csv`
+**Sources**
 
-Pool memberships come from `wxdata/configs/pool/standard_pools_2007_2023.yaml`.
-GitHub-example markers come from this checkout's
-[input manifest](manifests/notebook_inputs.csv), not from supporting files that
-merely mention an entity. Maintainer tooling generates this document from those
-sources; readers do not need the separate `wxdata` checkout.
+Source manifests are under `wxdata/paper_data/manifests/`.
+
+- **BA capacities:** `eia860_2024_operable_capacity_manifest_wtk_bchrrr_nsrdb_2007_2023.csv`
+- **State capacities:** `state_scenario_metric_metadata_manifest_wtk_bchrrr_nsrdb_2007_2023.csv`
+- **Pool capacities:** `pooled_region_scenario_metric_metadata_manifest_wtk_bchrrr_nsrdb_2007_2023.csv`
+- **Peak values and review details:** The [peak summary](manifests/dataset_peak_load_summary_2019_2022.csv)
+  lists missing-hour coverage, review decisions, and contributing pool members.
+- **Pool membership:** `wxdata/configs/pool/standard_pools_2007_2023.yaml`.
+
+</details>
 
 [zenodo-preview]: https://zenodo.org/records/21844870?preview=1&token=eyJhbGciOiJIUzUxMiJ9.eyJpZCI6ImU1YTZmOTdhLTg1Y2YtNGExMC1hMzdmLTY1NThjMGRjYzg0NyIsImRhdGEiOnt9LCJyYW5kb20iOiI4NThhZTRkYjg5OWNkNjg3MjM1NTBhYjAwYzg2NWU5YiJ9.kYx9A2TU38HVcXgbed38NuUok4_YGhmQ3K7MivkrsoIbPh9I--8NjqIJIjdHz5mhtkUs9elFEc7OdQBQn4bULQ

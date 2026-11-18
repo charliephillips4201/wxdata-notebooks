@@ -29,11 +29,8 @@ Finally, hours at or below a renewable CF threshold, or at or above a load/net-l
 
 Filenames identify the notebooks linked in the index; click a diagram to enlarge it.
 
-<a id="quick-start"></a>
-<a id="install-and-run-the-first-example"></a>
 
-To set up the environment and run a bundled-data example, see
-[Running the notebooks](RUNNING_NOTEBOOKS.md).
+The notebooks include saved outputs and can be viewed directly on GitHub.
 
 ## Notebook index
 
@@ -106,9 +103,7 @@ These files are a sample from the full Zenodo dataset. For their coverage,
 source paths, notebook consumers, and checksums, see the
 [input manifest](manifests/notebook_inputs.csv).
 
-Some notebook stages require additional software or external data access.
-See [Running the notebooks](RUNNING_NOTEBOOKS.md) and the requirements stated
-in each notebook.
+Each notebook summarizes its inputs and requirements; some stages need additional software or external data access.
 
 ### Full dataset on Zenodo
 
@@ -135,10 +130,7 @@ The notebooks currently expect a local HSDS service at
 Creating the Conda environment does not configure or start this service.
 Weather caches are not bundled with the repository.
 
-HSDS is not needed to view saved notebook results or run examples that use only
-bundled inputs. See [Running the notebooks](RUNNING_NOTEBOOKS.md) for
-stage-specific requirements and the relevant notebook cells for connection
-settings.
+HSDS is not needed to view saved notebook results or run examples that use only bundled inputs. See the relevant notebook cells for stage-specific requirements and connection settings.
 
 Instructions for setting up a local HSDS server can be found here: https://web.archive.org/web/20250423214155/https://nrel.github.io/rex/misc/examples.hsds.html#setting-up-a-local-hsds-server
 
