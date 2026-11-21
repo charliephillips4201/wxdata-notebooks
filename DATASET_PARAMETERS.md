@@ -150,8 +150,7 @@ Modeled BC-HRRR/NSRDB raw-load peaks, without GCAM scaling.
 
 ## BA pools and membership
 
-Coincident EIA-930 observed peaks use hours valid for every required load-bearing
-member, not sums of the members' individual peak loads.
+Peaks represent coincident loads at a certain timestamp, not sums of the members' individual peak loads.
 
 | Name | Code | Observed peak load (MW, 2019–2022) | Peak load time (UTC) | Wind nameplate (MW) | Solar nameplate (MW) |
 | --- | --- | ---: | --- | ---: | ---: |
@@ -171,8 +170,8 @@ member, not sums of the members' individual peak loads.
 | `ROE` (27) | `AEC`, `AECI`, `CPLE`, `DUK`, `FMPP`, `FPC`, `FPL`, `GVL`, `HST`, `ISNE`, `JEA`, `LGEE`, `NSB`, `NYIS`, `PJM`, `SC`, `SCEG`, `SEC`, `SOCO`, `SPA`, `SWPP`, `TAL`, `TEC`, `TVA`, `CPLW`, `NBSO`, `SEPA` |
 | `WECC` (32) | `AVA`, `AZPS`, `BANC`, `BPAT`, `CHPD`, `CISO`, `DOPD`, `EPE`, `GCPD`, `IID`, `IPCO`, `LDWP`, `NEVP`, `NWMT`, `PACE`, `PACW`, `PGE`, `PNM`, `PSCO`, `PSEI`, `SCL`, `SRP`, `TEPC`, `TIDC`, `TPWR`, `WACM`, `WALC`, `WAUW`, `AVRN`, `GRIS`, `GWA`, `WWA` |
 
-MISO, its subregions, and their pools overlap; do not add them together.
-WECC and ROE cover only their listed members.
+Note: MISO, its subregions, and their pools overlap; do not add them together.
+
 
 <a id="sources-and-interpretation"></a>
 <details>

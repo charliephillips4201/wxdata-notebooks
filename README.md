@@ -10,11 +10,17 @@ Reserved DOI: [10.5281/zenodo.21844870](https://doi.org/10.5281/zenodo.21844870)
 
 These datasets are meant to be used for power system modeling applications or analyses that require hourly resolution and spatiotemporal correlation between meteorological variables. Examples include hourly SCUC/SCED modeling and hourly, full sequential Monte Carlo resource adequacy evaluations. The datasets can also be used to identify extreme events as a function of resource mix and quantify the benefit in pooling together BAs with non-coincident net load peaks. Finally, the hourly values can be aggregated into hourly or seasonal capacity factors to maintain computational tractability for long-term expansion planning models.  
 
-The workflow has two branches, the "Load Forecast Process" and the "Wind/Solar CF Process." These are shown below. State load is calculated from BA load outputs; state renewable CF is calculated from state-assigned site profiles across contributing BAs.
-
 **Load and renewable capacity factors**
 
+The below diagram shows how the BA-level load and wind/solar CF forecasts are created. From the BA-level loads, state-level loads can be created by aggregating BA-level loads to the state level based on county population weights. State-level wind and solar CF can be created by assigning individual wind or solar facilities to states instead of balancing authorities using the lat/lon of those wind farms. 
+
 [![Weather and fleet inputs become BA and state load and renewable capacity factors, with site profiles weighted separately by BA and state.](process_flow_load_and_cf.png)](process_flow_load_and_cf.png)
+
+*Figure 1. Workflow for generating hourly electricity load and wind/solar capacity factors for balancing authorities (BAs) and states. Notebook filenames identify where each stage is demonstrated.*
+
+Load forecasts are created using PNNL's Total ELectricity Loads (TELL) tool. Wind/solar forecasts are created using NLR's Renewable Energy Potential (reV) tool. Both use NLR's meteorological datasets (Wind Toolkit/NSRDB/BC-HRRR for historical wind, solar, and load (2007-2023)  sup3rCC for simulated past and future climate wind/solar/load (2000-2099))
+
+**Scenarios, pooling, and stress events**
 
 These outputs are then used to create hourly net load and equivalent renewable CF values (together called "scenario metrics") for 6 different capacity ratios of wind and solar: 0/100, 25/75, 50/50, 75/25, 100/0, and actual EIA-860 mix (based on 2024 EIA-860 data). This gives 6 net load timeseries, 6 renewable CF timeseries, and 1 load timeseries for each BA containing wind CF, solar CF, and load, for a total of 13 "scenario metrics" per BA. BAs missing wind CF (due to no wind generators) or solar CF (due to no solar generators) only have 1 net load timeseries and 1 renewable CF timeseries. 
 
@@ -22,21 +28,18 @@ These "scenario metrics" can similarly be applied for pools of BAs or for states
 
 Finally, hours at or below a renewable CF threshold, or at or above a load/net-load threshold, are grouped into ‘stress events’ when consecutive or separated by a single non-qualifying hour. Identifying stress events in the renewable CF, net load, and load datasets is critical for correlating historical extreme weather events to instances with high nodal prices in a production cost model or expected unserved energy in a resource adequacy model. This allows modelers to draw a direct link between weather patterns and their impact on the economics and reliability of the power system, and how those impacts vary as a function of resource mix. 
 
-
-**Scenarios, pooling, and stress events**
+The below diagram shows the creation of "scenario metrics" (i.e. the load, net load, and renewable CF timeseries) from the load, wind CF, and solar CF datasets, as well as the identification of stress events from the "scenario metrics" datasets.
 
 [![BA and state load, renewable capacity factors, and nameplate capacity feed scenario metrics and stress-event catalogs, with a separate BA pooling branch.](process_flow_scenarios_and_events.png)](process_flow_scenarios_and_events.png)
 
-Filenames identify the notebooks linked in the index; click a diagram to enlarge it.
+*Figure 2. Workflow for generating scenario metrics and stress-event catalogs for individual BAs, states, and BA pools.*
 
-
-The notebooks include saved outputs and can be viewed directly on GitHub.
 
 ## Notebook index
 
 The notebooks are split into three groups: "data flow," "validation," and "analysis."
 
-The data flow notebooks show the end-to-end process by which the BA-level load and wind/solar CF datasets are created, along with their derivative products (BA scenario metrics, pooled scenario metrics, stress event catalogs, and state load).
+The data flow notebooks show the end-to-end process by which the BA-level load and wind/solar CF datasets are created, along with their derivative products (BA scenario metrics, pooled scenario metrics, stress event catalogs, and state load/wind/solar).
 
 The validation notebooks show the BA-level load forecasts and wind/solar generation forecasts (i.e. --> wind/solar CF are multiplied by their nameplate capacities in MW using EIA-860 data) validated against EIA-930 data, and they also show how the historical weather dataset for the state of Iowa (from WTK/BCHRRR for wind energy variables and NSRDB for solar energy variables) compares to the sup3rCC dataset, which is a climate dataset created by using generative AI to downscale daily, low-resolution climate models to hourly, high-resolution datasets adequate for production cost and resource adequacy modeling.
 
@@ -103,7 +106,6 @@ These files are a sample from the full Zenodo dataset. For their coverage,
 source paths, notebook consumers, and checksums, see the
 [input manifest](manifests/notebook_inputs.csv).
 
-Each notebook summarizes its inputs and requirements; some stages need additional software or external data access.
 
 ### Full dataset on Zenodo
 
@@ -157,11 +159,8 @@ For detailed portfolio definitions and loss adjustments, see
 For event thresholds and grouping rules, see
 [stress-event catalogs](notebooks/data_flow/ba_stress_event_catalog.ipynb).
 
-## Known limitations
-
 Iowa's TaiESM1 pressure averages approximately **9,369 Pa below the historical
-series** over 2007–2023. The upstream cause remains unresolved, and no correction
-has been applied. See the
+series** over 2007–2023. No correction has been applied. See the
 [Iowa diagnostics](notebooks/validation/state_historical_taiesm_validation.ipynb).
 
 ## Sources and citation
@@ -181,12 +180,6 @@ and [policy notices](https://www.census.gov/about/policies.html), and
 [GCAM-USA attribution](https://github.com/JGCRI/gcam-doc/blob/gh-pages/gcam-usa.md).
 
 <a id="verification-and-publication-status"></a>
-
-Recorded execution checks found matching reference results for the compared
-examples; they do not establish a clean installation or validate every product.
-Site-CF validation used legacy weather caches without original source-version
-metadata. Dataset and notebook versions are independent; consult Zenodo for
-release availability and retain the notebook revision with your results.
 
 AI Disclaimer: OpenAI Codex assisted with writing code and documentation
 
